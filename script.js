@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const mensagemDiv = document.getElementById('mensagem');
 
     // **Substitua pela URL do seu Aplicativo da Web do Apps Script**
-    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycby79eiznEUk30Xe-hhBAfuTzhIzO4SdGTZvP8ZpsXmFmo24rfzLZ5xenWp54dwmAMWc7w/exec';
+    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbz1TIfDzGzhiES50UCVSOpfjZsQY24g0MQt4QJlYFjxVDuDQqcNXD66aQcOQwwtcirPyQ/exec';
 
     form.addEventListener('submit', async (event) => {
         event.preventDefault(); // Impede o envio padrão do formulário
@@ -12,11 +12,13 @@ document.addEventListener('DOMContentLoaded', () => {
         mensagemDiv.style.color = '#007bff'; // Azul para "registrando"
 
         const paciente = document.getElementById('paciente').value;
+        const procedimento = document.getElementById('procedimento').value;
         const profissional = document.getElementById('profissional').value;
 
         // Cria um objeto FormData para enviar os dados
         const formData = new FormData();
         formData.append('paciente', paciente);
+        formData.append('procedimento', procedimento);
         formData.append('profissional', profissional);
 
         try {
