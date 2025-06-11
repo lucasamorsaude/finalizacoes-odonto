@@ -1,137 +1,166 @@
 body {
-    font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif; /* Fonte mais moderna */
-    background: linear-gradient(to right, #e0f2f7, #c1e4f4); /* Gradiente suave de azul/verde */
+    font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    background: linear-gradient(to right, #e0f2f7, #c1e4f4);
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
     margin: 0;
-    color: #333; /* Cor de texto padrão */
+    color: #333;
+    padding: 20px; /* Adiciona padding ao body para não colar nas bordas em telas muito pequenas */
+    box-sizing: border-box; /* Garante que o padding não adicione scrollbar */
 }
 
 .container {
     background-color: #ffffff;
-    padding: 35px 40px; /* Mais padding para espaço */
-    border-radius: 12px; /* Cantos mais arredondados */
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15); /* Sombra mais suave e proeminente */
+    padding: 35px 40px;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
     width: 100%;
-    max-width: 450px; /* Um pouco mais largo */
+    max-width: 450px;
     text-align: center;
-    box-sizing: border-box; /* Garante que padding e borda não aumentem a largura total */
+    box-sizing: border-box;
 }
 
-.logo { /* Estilos para a logo, se for adicionar */
+/* Remova ou ajuste o .logo se não for usar imagem ainda */
+.logo {
     max-width: 150px;
     margin-bottom: 25px;
 }
 
 h1 {
-    color: #007bff; /* Azul primário */
+    color: #007bff;
     margin-bottom: 25px;
-    font-size: 2.2em; /* Título maior */
-    font-weight: 600; /* Mais encorpado */
+    font-size: 2.2em;
+    font-weight: 600;
 }
 
 .form-group {
-    margin-bottom: 20px; /* Mais espaço entre os grupos */
+    margin-bottom: 20px;
     text-align: left;
 }
 
 label {
     display: block;
-    margin-bottom: 8px; /* Mais espaço da label para o input */
+    margin-bottom: 8px;
     font-weight: bold;
     color: #555;
     font-size: 0.95em;
 }
 
-input[type="text"] {
-    width: 100%;
-    padding: 12px 15px; /* Mais padding */
-    border: 1px solid #cce5ff; /* Borda azul clara */
-    border-radius: 8px; /* Cantos arredondados */
-    box-sizing: border-box;
-    font-size: 1.05em;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-input[type="text"]:focus {
-    border-color: #007bff; /* Borda azul ao focar */
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25); /* Sombra suave ao focar */
-    outline: none; /* Remove o outline padrão */
-}
-
-button {
-    background-color: #28a745; /* Verde vibrante */
-    color: white;
-    padding: 14px 25px; /* Mais padding */
-    border: none;
-    border-radius: 8px; /* Cantos arredondados */
-    cursor: pointer;
-    font-size: 1.1em; /* Fonte maior */
-    font-weight: bold;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    width: 100%; /* Botão ocupa 100% da largura */
-    margin-top: 15px; /* Espaço do formulário */
-}
-
-button:hover {
-    background-color: #218838; /* Verde mais escuro no hover */
-    transform: translateY(-2px); /* Efeito suave de "levantar" */
-}
-
-button:active {
-    transform: translateY(0); /* Volta ao normal ao clicar */
-}
-
-#mensagem {
-    margin-top: 25px; /* Mais espaço */
-    font-weight: bold;
-    font-size: 1.05em;
-}
-
-/* Cores para a mensagem */
-#mensagem[style*="success"] { /* Adapta para a cor de sucesso (verde) */
-    color: #28a745 !important;
-}
-
-#mensagem[style*="error"] { /* Adapta para a cor de erro (vermelho) */
-    color: #dc3545 !important;
-}
-
-select {
+input[type="text"],
+select { /* Aplica os mesmos estilos básicos para ambos os campos de formulário */
     width: 100%;
     padding: 12px 15px;
     border: 1px solid #cce5ff;
     border-radius: 8px;
     box-sizing: border-box;
     font-size: 1.05em;
-    height: 48px; /* Altura para alinhar com os inputs */
-    background-color: #fcfdff; /* Levemente diferente do branco puro */
-    appearance: none; /* Remove a seta padrão em alguns navegadores */
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    background-image: url('data:image/svg+xml;utf8,<svg fill="%23007bff" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>'); /* Seta personalizada */
-    background-repeat: no-repeat;
-    background-position: right 15px center;
-    background-size: 20px;
+    height: 48px; /* Altura fixa para inputs e select */
+    background-color: #fcfdff;
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
+select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%23007bff" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 20px;
+}
+
+input[type="text"]:focus,
 select:focus {
     border-color: #007bff;
     box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
     outline: none;
 }
 
-/* Responsividade básica para telas menores */
-@media (max-width: 500px) {
+button {
+    background-color: #28a745;
+    color: white;
+    padding: 14px 25px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    width: 100%;
+    margin-top: 15px;
+}
+
+button:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+#mensagem {
+    margin-top: 25px;
+    font-weight: bold;
+    font-size: 1.05em;
+}
+
+#mensagem[style*="success"] {
+    color: #28a745 !important;
+}
+
+#mensagem[style*="error"] {
+    color: #dc3545 !important;
+}
+
+/* Melhorias na Responsividade para Telas Menores */
+@media (max-width: 600px) { /* Ajustando o breakpoint para 600px para pegar mais dispositivos */
+    body {
+        padding: 10px; /* Reduz um pouco o padding do body em telas menores */
+    }
+
     .container {
-        padding: 25px 20px;
-        margin: 15px;
+        padding: 25px 20px; /* Reduz padding interno do container */
+        border-radius: 0; /* Remove border-radius para ocupar a tela inteira em larguras menores */
+        box-shadow: none; /* Remove sombra em telas muito pequenas para dar sensação de app */
+        max-width: 100%; /* Garante que o container ocupe toda a largura disponível */
+        min-height: 100vh; /* Ocupa a altura total da tela */
+        display: flex; /* Para centralizar o conteúdo verticalmente */
+        flex-direction: column;
+        justify-content: center; /* Centraliza o conteúdo verticalmente */
     }
 
     h1 {
-        font-size: 1.8em;
+        font-size: 2em; /* Título um pouco menor */
+        margin-bottom: 20px;
+    }
+
+    input[type="text"],
+    select,
+    button {
+        font-size: 1em; /* Reduz o tamanho da fonte nos campos */
+        padding: 10px 12px; /* Reduz o padding dos campos */
+        height: 45px; /* Altura um pouco menor para campos */
+    }
+
+    label {
+        font-size: 0.9em; /* Label um pouco menor */
+        margin-bottom: 5px;
+    }
+
+    .form-group {
+        margin-bottom: 15px; /* Menos espaço entre grupos de formulário */
+    }
+
+    button {
+        margin-top: 10px; /* Menos espaço antes do botão */
+        padding: 12px 20px;
+    }
+
+    #mensagem {
+        font-size: 0.95em;
+        margin-top: 20px;
     }
 }
