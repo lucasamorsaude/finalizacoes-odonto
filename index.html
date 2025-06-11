@@ -1,55 +1,65 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Finalização de Procedimento</title>
+  <meta charset="UTF-8">
+  <title>Finalização de Procedimento</title>
 </head>
 <body>
-  <h1>Finalizar Procedimento</h1>
-  <form id="finalizacaoForm">
-    <label>Nome do Paciente:<br>
-      <input type="text" id="nomePaciente" required>
-    </label><br><br>
-    
-    <label>Profissional:<br>
-      <select id="profissional" required>
-        <option value="">Selecione</option>
-        <option>Dentista 1</option>
-        <option>Dentista 2</option>
-        <option>Dentista 3</option>
-      </select>
-    </label><br><br>
+  <h1>Finalizar Procedimento</h1>
+  <form id="finalizacaoForm">
+    <label>Nome do Paciente:<br>
+      <input type="text" id="nomePaciente" required>
+    </label><br><br>
+    
+    <label>Profissional:<br>
+      <select id="profissional" required>
+        <option value="">Selecione</option>
+        <option>Dentista 1</option>
+        <option>Dentista 2</option>
+        <option>Dentista 3</option>
+      </select>
+    </label><br><br>
 
-    <button type="submit">Finalizar</button>
-  </form>
+    <button type="submit">Finalizar</button>
+  </form>
 
-  <p id="mensagem"></p>
+  <p id="mensagem"></p>
 
-  <script>
-    document.getElementById("finalizacaoForm").addEventListener("submit", function(e) {
-      e.preventDefault();
-      
-      const nomePaciente = document.getElementById("nomePaciente").value;
-      const profissional = document.getElementById("profissional").value;
+  <script>
+    document.getElementById("finalizacaoForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      
+      const nomePaciente = document.getElementById("nomePaciente").value;
+      const profissional = document.getElementById("profissional").value;
 
-      fetch("https://script.google.com/macros/s/AKfycbzm4-vD8LDOnyNbHJlqnImuM0tiRq_SHOzowOCqcXdPJJrHghiuR7JLa-gbtKnYrlVS0Q/exec", {
-        method: "POST",
-        body: JSON.stringify({
-          nomePaciente,
-          profissional
-        }),
-        headers: {
-          "Content-Type": "application/json"
-        }
-      }).then(response => {
+      fetch("https://script.google.com/macros/s/AKfycbymIsdaZnAU5ySrS8YvNXNVRxXnwquU8wbm-oSRwUKRI_KPM-LUuTWO-PpOPXqsI2WzFg/exec", {
+        method: "POST",
+        body: JSON.stringify({
+          nomePaciente,
+          profissional
+        }),
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }).then(response => {
+        // Verifique se a resposta foi bem-sucedida (status 2xx)
         if (response.ok) {
-          document.getElementById("mensagem").textContent = "Finalizado com sucesso!";
-          document.getElementById("finalizacaoForm").reset();
+            return response.json(); // Se a resposta é OK, parseie como JSON
         } else {
-          document.getElementById("mensagem").textContent = "Erro ao enviar dados.";
+            throw new Error('Erro na requisição: ' + response.statusText);
         }
-      });
-    });
-  </script>
+      }).then(data => {
+        // Se o status no JSON for 'success'
+        if (data.status === "success") {
+          document.getElementById("mensagem").textContent = data.message;
+          document.getElementById("finalizacaoForm").reset();
+        } else {
+            document.getElementById("mensagem").textContent = "Erro ao enviar dados: " + data.message;
+        }
+      }).catch(error => {
+          document.getElementById("mensagem").textContent = "Erro ao enviar dados: " + error.message;
+      });
+    });
+  </script>
 </body>
 </html>
