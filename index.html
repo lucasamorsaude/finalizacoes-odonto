@@ -1,65 +1,147 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Finalização de Procedimento</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finalização de Procedimento - AmorSaude</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: #333;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        h1 {
+            color: #007bff;
+            margin-bottom: 25px;
+            font-size: 24px;
+        }
+        label {
+            display: block;
+            text-align: left;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        input[type="text"],
+        select {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 700;
+            transition: background-color 0.3s ease;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        #mensagem {
+            margin-top: 20px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .success {
+            color: #28a745;
+        }
+        .error {
+            color: #dc3545;
+        }
+    </style>
 </head>
 <body>
-  <h1>Finalizar Procedimento</h1>
-  <form id="finalizacaoForm">
-    <label>Nome do Paciente:<br>
-      <input type="text" id="nomePaciente" required>
-    </label><br><br>
-    
-    <label>Profissional:<br>
-      <select id="profissional" required>
-        <option value="">Selecione</option>
-        <option>Dentista 1</option>
-        <option>Dentista 2</option>
-        <option>Dentista 3</option>
-      </select>
-    </label><br><br>
+    <div class="container">
+        <h1>Finalizar Procedimento</h1>
+        <form id="finalizacaoForm">
+            <label for="nomePaciente">Nome do Paciente:</label>
+            <input type="text" id="nomePaciente" required>
+            
+            <label for="profissional">Profissional:</label>
+            <select id="profissional" required>
+                <option value="">Selecione</option>
+                <option>Dentista 1</option>
+                <option>Dentista 2</option>
+                <option>Dentista 3</option>
+                <option>Higienista</option>
+                <option>Radiologista</option>
+            </select>
 
-    <button type="submit">Finalizar</button>
-  </form>
+            <button type="submit">Finalizar</button>
+        </form>
+        <p id="mensagem"></p>
+    </div>
 
-  <p id="mensagem"></p>
+    <script>
+        document.getElementById("finalizacaoForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+            
+            const nomePaciente = document.getElementById("nomePaciente").value;
+            const profissional = document.getElementById("profissional").value;
 
-  <script>
-    document.getElementById("finalizacaoForm").addEventListener("submit", function(e) {
-      e.preventDefault();
-      
-      const nomePaciente = document.getElementById("nomePaciente").value;
-      const profissional = document.getElementById("profissional").value;
+            // Limpa mensagens anteriores
+            const mensagemElement = document.getElementById("mensagem");
+            mensagemElement.textContent = "Enviando...";
+            mensagemElement.className = ""; // Remove classes de estilo anteriores
 
-      fetch("https://script.google.com/macros/s/AKfycbzkyAQrjXOuCef0HGB25kCeOyY3jaM6cqrUPg5oLj-Lzfc_DykkKtlL8wp5rzyo85sXYg/exec", {
-        method: "POST",
-        body: JSON.stringify({
-          nomePaciente,
-          profissional
-        }),
-        headers: {
-          "Content-Type": "application/json"
-        }
-      }).then(response => {
-        // Verifique se a resposta foi bem-sucedida (status 2xx)
-        if (response.ok) {
-            return response.json(); // Se a resposta é OK, parseie como JSON
-        } else {
-            throw new Error('Erro na requisição: ' + response.statusText);
-        }
-      }).then(data => {
-        // Se o status no JSON for 'success'
-        if (data.status === "success") {
-          document.getElementById("mensagem").textContent = data.message;
-          document.getElementById("finalizacaoForm").reset();
-        } else {
-            document.getElementById("mensagem").textContent = "Erro ao enviar dados: " + data.message;
-        }
-      }).catch(error => {
-          document.getElementById("mensagem").textContent = "Erro ao enviar dados: " + error.message;
-      });
-    });
-  </script>
+            // ATENÇÃO: SUBSTITUA ESTE URL PELO SEU NOVO URL DE IMPLANTAÇÃO DO GOOGLE APPS SCRIPT
+            const scriptUrl = "https://script.google.com/macros/s/AKfycbyUMdIeVtNnzrlAGLSZsYxf9AW8A3W9ljklwSfMq9XlbpSdPN0agHNDaZsEcFM5-Aw38g/exec";
+
+            fetch(scriptUrl, {
+                method: "POST",
+                body: JSON.stringify({
+                    nomePaciente,
+                    profissional
+                }),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }).then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    // Tenta ler o erro do corpo da resposta se não for OK, caso o Apps Script envie detalhes
+                    return response.text().then(text => {
+                        throw new Error('Erro na requisição: ' + response.statusText + ' - ' + text);
+                    });
+                }
+            }).then(data => {
+                if (data.status === "success") {
+                    mensagemElement.textContent = "Finalizado com sucesso!";
+                    mensagemElement.className = "success";
+                    document.getElementById("finalizacaoForm").reset();
+                } else {
+                    mensagemElement.textContent = "Erro ao enviar dados: " + (data.message || "Detalhes desconhecidos.");
+                    mensagemElement.className = "error";
+                }
+            }).catch(error => {
+                mensagemElement.textContent = "Erro ao enviar dados: " + error.message;
+                mensagemElement.className = "error";
+                console.error("Erro completo:", error); // Para depuração
+            });
+        });
+    </script>
 </body>
 </html>
