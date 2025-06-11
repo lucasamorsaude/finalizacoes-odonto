@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Finalização de Procedimento</title>
+    <title>Finalização de Procedimento - AmorSaude</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -12,13 +12,20 @@
         <form id="procedimentoForm">
             <div class="form-group">
                 <label for="paciente">Nome do Paciente:</label>
-                <input type="text" id="paciente" name="paciente" required>
+                <input type="text" id="paciente" name="paciente" required placeholder="Digite o nome completo do paciente">
             </div>
             <div class="form-group">
                 <label for="profissional">Nome do Profissional:</label>
-                <input type="text" id="profissional" name="profissional" required>
+                <select id="profissional" name="profissional" required>
+                    <option value="" disabled selected>Selecione o profissional</option> <option value="Dr(a). Ana Silva">Dr(a). Ana Silva</option>
+                    <option value="Dr(a). Bruno Costa">Dr(a). Bruno Costa</option>
+                    <option value="Dr(a). Carla Dias">Dr(a). Carla Dias</option>
+                    <option value="Dr(a). Eduardo Freitas">Dr(a). Eduardo Freitas</option>
+                    <option value="Dr(a). Fernanda Gomes">Dr(a). Fernanda Gomes</option>
+                    <option value="Dr(a). Gustavo Henrique">Dr(a). Gustavo Henrique</option>
+                    </select>
             </div>
-            <button type="submit">Registrar</button>
+            <button type="submit">Registrar Finalização</button>
             <p id="mensagem"></p>
         </form>
     </div>
