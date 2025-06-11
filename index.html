@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Finalização de Procedimento</title>
+</head>
+<body>
+  <h1>Finalizar Procedimento</h1>
+  <form id="finalizacaoForm">
+    <label>Nome do Paciente:<br>
+      <input type="text" id="nomePaciente" required>
+    </label><br><br>
+    
+    <label>Profissional:<br>
+      <select id="profissional" required>
+        <option value="">Selecione</option>
+        <option>Dentista 1</option>
+        <option>Dentista 2</option>
+        <option>Dentista 3</option>
+      </select>
+    </label><br><br>
+
+    <button type="submit">Finalizar</button>
+  </form>
+
+  <p id="mensagem"></p>
+
+  <script>
+    document.getElementById("finalizacaoForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      
+      const nomePaciente = document.getElementById("nomePaciente").value;
+      const profissional = document.getElementById("profissional").value;
+
+      fetch("SUA_URL_DO_WEB_APP", {
+        method: "POST",
+        body: JSON.stringify({
+          nomePaciente,
+          profissional
+        }),
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }).then(response => {
+        if (response.ok) {
+          document.getElementById("mensagem").textContent = "Finalizado com sucesso!";
+          document.getElementById("finalizacaoForm").reset();
+        } else {
+          document.getElementById("mensagem").textContent = "Erro ao enviar dados.";
+        }
+      });
+    });
+  </script>
+</body>
+</html>
