@@ -116,46 +116,54 @@ button:active {
 }
 
 /* Melhorias na Responsividade para Telas Menores */
-@media (max-width: 600px) { /* Ajustando o breakpoint para 600px para pegar mais dispositivos */
+@media (max-width: 600px) { /* Este é o breakpoint para dispositivos móveis */
     body {
-        padding: 10px; /* Reduz um pouco o padding do body em telas menores */
+        padding: 10px;
     }
 
     .container {
-        padding: 25px 20px; /* Reduz padding interno do container */
-        border-radius: 0; /* Remove border-radius para ocupar a tela inteira em larguras menores */
-        box-shadow: none; /* Remove sombra em telas muito pequenas para dar sensação de app */
-        max-width: 100%; /* Garante que o container ocupe toda a largura disponível */
-        min-height: 100vh; /* Ocupa a altura total da tela */
-        display: flex; /* Para centralizar o conteúdo verticalmente */
+        padding: 25px 20px;
+        border-radius: 0;
+        box-shadow: none;
+        max-width: 100%;
+        min-height: 100vh;
+        display: flex;
         flex-direction: column;
-        justify-content: center; /* Centraliza o conteúdo verticalmente */
+        justify-content: center;
     }
 
     h1 {
-        font-size: 2em; /* Título um pouco menor */
+        font-size: 2em;
         margin-bottom: 20px;
     }
 
     input[type="text"],
-    select,
-    button {
-        font-size: 1em; /* Reduz o tamanho da fonte nos campos */
-        padding: 10px 12px; /* Reduz o padding dos campos */
-        height: 45px; /* Altura um pouco menor para campos */
+    button { /* Note que select está fora, para estilizar separadamente */
+        font-size: 1em;
+        padding: 10px 12px;
+        height: 45px;
+    }
+
+    /* Estilos ESPECÍFICOS para o SELECT em mobile */
+    select {
+        font-size: 1.1em; /* Aumenta a fonte do texto do select */
+        padding: 14px 16px; /* Aumenta o padding para ser mais fácil de tocar */
+        height: 50px; /* Aumenta a altura para combinar com o padding */
+        background-position: right 20px center; /* Move a seta um pouco para a direita */
+        background-size: 24px; /* Aumenta o tamanho da seta SVG */
     }
 
     label {
-        font-size: 0.9em; /* Label um pouco menor */
+        font-size: 0.9em;
         margin-bottom: 5px;
     }
 
     .form-group {
-        margin-bottom: 15px; /* Menos espaço entre grupos de formulário */
+        margin-bottom: 15px;
     }
 
     button {
-        margin-top: 10px; /* Menos espaço antes do botão */
+        margin-top: 10px;
         padding: 12px 20px;
     }
 
