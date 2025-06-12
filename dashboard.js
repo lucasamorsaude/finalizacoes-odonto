@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const filtroProfissionalSelect = document.getElementById('filtroProfissional');
     const logoutButton = document.getElementById('logoutButton');
 
-    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycby0xzgWwljAOiggUZqkxAZOo4MGq8JXEi5n1jWOEl7a_UEmJFs_i2yYnak7GA82Ep0nLQ/exec'; // **VERIFIQUE SE ESTA URL ESTÁ ATUALIZADA COM A SUA**
+    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzEAxo7Vhyq5YQgLx6M4YB17X4onpl91JIw5m2exzF8GE-L74jHwEso89Eq7hsi8_nEpA/exec'; // **VERIFIQUE SE ESTA URL ESTÁ ATUALIZADA COM A SUA**
 
     const loggedInUser = localStorage.getItem('loggedInUser'); // Obtém o usuário curto logado
 
