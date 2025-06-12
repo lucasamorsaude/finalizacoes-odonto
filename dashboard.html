@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta de Procedimentos - AmorSaude</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body class="dashboard-page">
+    <div class="container">
+        <header class="dashboard-header"> <h1>Consulta de Procedimentos</h1>
+            <button id="logoutButton" class="header-button">Sair</button> </header>
+
+        <div class="filter-controls"> <div class="form-group filter-group"> <label for="filtroProfissional">Filtrar por Profissional:</label>
+                <select id="filtroProfissional" name="filtroProfissional">
+                    <option value="">Todos</option>
+                    </select>
+            </div>
+            <button id="consultarButton">Consultar</button>
+        </div>
+
+        <div id="resultados" style="margin-top: 30px; text-align: left;">
+            <p>Selecione um filtro e clique em "Consultar" para ver os dados.</p>
+        </div>
+        <p id="dashboardMessage"></p>
+    </div>
+
+    <script src="dashboard.js"></script>
+</body>
+</html>

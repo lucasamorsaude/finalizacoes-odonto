@@ -15,13 +15,13 @@
                 <input type="text" id="paciente" name="paciente" required placeholder="Digite o nome completo do paciente">
             </div>
             <div class="form-group">
-                <label for="paciente">Procedimento:</label>
+                <label for="procedimento">Procedimento:</label>
                 <input type="text" id="procedimento" name="procedimento" required placeholder="Digite o procedimento realizado">
             </div>
             <div class="form-group">
                 <label for="profissional">Nome do Profissional:</label>
                 <select id="profissional" name="profissional" required>
-                    <option value="" disabled selected>Selecione o profissional</option> 
+                    <option value="" disabled selected>Selecione o profissional</option>
                     <option value="Dr. Lair Felipe Faria Frederico">Dr. Lair Felipe Faria Frederico</option>
                     <option value="Dr. Wesley Gutierre Resende">Dr. Wesley Gutierre Resende</option>
                     <option value="Dra. Ana Flávia Campos">Dra. Ana Flávia Campos</option>
@@ -34,13 +34,19 @@
                     <option value="Dra. Naruna Luany Resende Campos">Dra. Naruna Luany Resende Campos</option>
                     <option value="Dra. Rafaela Carolina Nascimento">Dra. Rafaela Carolina Nascimento</option>
                     <option value="Dra. Sarah Bruna Almeida Aquino de Faria">Dra. Sarah Bruna Almeida Aquino de Faria</option>
-                    </select>
+                </select>
             </div>
             <button type="submit">Registrar Finalização</button>
             <p id="mensagem"></p>
         </form>
+        <button id="loginButton" style="background-color: #007bff; margin-top: 20px;">Acessar Consulta</button>
     </div>
 
     <script src="script.js"></script>
+    <script>
+        document.getElementById('loginButton').addEventListener('click', () => {
+            window.location.href = 'login.html';
+        });
+    </script>
 </body>
 </html>

@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const mensagemDiv = document.getElementById('mensagem');
 
     // **Substitua pela URL do seu Aplicativo da Web do Apps Script**
-    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbz1TIfDzGzhiES50UCVSOpfjZsQY24g0MQt4QJlYFjxVDuDQqcNXD66aQcOQwwtcirPyQ/exec';
+    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycby0xzgWwljAOiggUZqkxAZOo4MGq8JXEi5n1jWOEl7a_UEmJFs_i2yYnak7GA82Ep0nLQ/exec';
 
     form.addEventListener('submit', async (event) => {
         event.preventDefault(); // Impede o envio padrão do formulário

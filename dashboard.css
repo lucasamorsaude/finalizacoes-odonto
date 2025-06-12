@@ -1,0 +1,334 @@
+/* dashboard.css - Estilos Profissionais */
+
+:root {
+    --primary-blue: #007bff;
+    --secondary-blue: #e0f2f7;
+    --dark-blue: #0056b3;
+    --green-success: #28a745;
+    --green-dark: #218838;
+    --red-danger: #dc3545;
+    --red-dark: #c82333;
+    --text-dark: #343a40;
+    --text-medium: #6c757d;
+    --light-grey: #f8f9fa;
+    --border-color: #dee2e6;
+    --shadow-light: rgba(0, 0, 0, 0.08);
+    --shadow-medium: rgba(0, 0, 0, 0.15);
+}
+
+body.dashboard-page {
+    font-family: 'Inter', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    background: linear-gradient(135deg, var(--secondary-blue) 0%, #c1e4f4 100%);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    margin: 0;
+    color: var(--text-dark);
+    padding: 30px 20px;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+body.dashboard-page .container {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px var(--shadow-medium);
+    width: 100%;
+    max-width: 1200px;
+    text-align: center;
+    box-sizing: border-box;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    transition: all 0.3s ease;
+    position: relative; /* Adicionado para posicionamento absoluto do botão Sair */
+}
+
+/* NOVO: Estilos para o cabeçalho (título e botão Sair) */
+.dashboard-header {
+    display: flex;
+    justify-content: space-between; /* Alinha o título à esquerda e o botão à direita */
+    align-items: center;
+    margin-bottom: 35px;
+    position: relative; /* Para garantir que o botão Sair flutue corretamente */
+}
+
+.dashboard-header h1 {
+    color: var(--primary-blue);
+    margin: 0; /* Remove margem padrão do h1 para flexbox */
+    font-size: 2.5em;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+/* NOVO: Estilo para o botão Sair no cabeçalho */
+.dashboard-header .header-button {
+    background-color: var(--red-danger); /* Cor vermelha para Sair */
+    color: white;
+    padding: 8px 18px; /* Padding menor para o botão do topo */
+    border: none;
+    border-radius: 6px; /* Bordas mais sutis */
+    cursor: pointer;
+    font-size: 0.95em; /* Fonte menor */
+    font-weight: 600; /* Menos negrito */
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    width: auto; /* Permite que o botão se ajuste ao conteúdo */
+    margin-top: 0; /* Remove margem superior */
+    box-shadow: 0 2px 5px var(--shadow-light); /* Sombra mais discreta */
+}
+
+.dashboard-header .header-button:hover {
+    background-color: var(--red-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(220, 53, 69, 0.2);
+}
+
+.dashboard-header .header-button:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 3px var(--shadow-light);
+}
+
+
+/* NOVO: Estilos para o grupo de filtro e botão Consultar lado a lado */
+.filter-controls {
+    display: flex;
+    gap: 20px; /* Espaço entre os elementos */
+    align-items: flex-end; /* Alinha a base dos elementos */
+    margin-bottom: 30px; /* Espaço antes da tabela */
+    flex-wrap: wrap; /* Permite quebrar linha em telas pequenas */
+}
+
+.filter-group {
+    flex-grow: 1; /* Permite que o select ocupe o máximo de espaço */
+    margin-bottom: 0; /* Remove a margem inferior para flexbox */
+}
+
+/* Ajustes gerais de labels e selects que se aplicam a todas as páginas ou são genéricos */
+label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: var(--text-medium);
+    font-size: 1em;
+}
+
+select {
+    width: 100%;
+    padding: 14px 18px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 1.05em;
+    height: 52px;
+    background-color: var(--light-grey);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%23007bff" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 18px center;
+    background-size: 20px;
+    cursor: pointer;
+}
+
+select:focus {
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.2);
+    outline: none;
+}
+
+button#consultarButton {
+    background-color: var(--green-success);
+    color: white;
+    padding: 15px 30px; /* Mantém o padding maior para o botão de consultar */
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.15em;
+    font-weight: 700;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    width: auto; /* Para que o botão se ajuste ao conteúdo quando lado a lado */
+    margin-top: 0; /* Remove margem superior para alinhar */
+    box-shadow: 0 4px 10px var(--shadow-light);
+}
+
+button#consultarButton:hover {
+    background-color: var(--green-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(40, 167, 69, 0.25);
+}
+
+button#consultarButton:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 5px var(--shadow-light);
+}
+
+#dashboardMessage {
+    margin-top: 30px;
+    font-weight: 600;
+    font-size: 1.1em;
+    color: var(--text-dark);
+}
+
+#dashboardMessage[style*="success"] {
+    color: var(--green-success) !important;
+}
+
+#dashboardMessage[style*="error"] {
+    color: var(--red-danger) !important;
+}
+
+/* Estilos para a Tabela de Resultados (mantidos) */
+.data-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 35px;
+    box-shadow: 0 8px 20px var(--shadow-light);
+    background-color: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+}
+
+.data-table th,
+.data-table td {
+    padding: 15px 20px;
+    text-align: left;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.data-table th {
+    background-color: var(--primary-blue);
+    color: white;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.9em;
+    letter-spacing: 0.05em;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.data-table tbody tr:nth-child(even) {
+    background-color: var(--light-grey);
+}
+
+.data-table tbody tr:hover {
+    background-color: #e6f7ff;
+    cursor: default;
+}
+
+.data-table td {
+    color: var(--text-dark);
+    font-size: 0.98em;
+    line-height: 1.4;
+}
+
+/* Responsividade para telas menores (smartphones) */
+@media (max-width: 768px) {
+    body.dashboard-page {
+        padding: 15px;
+        align-items: flex-start;
+    }
+
+    body.dashboard-page .container {
+        padding: 25px;
+        margin-top: 15px;
+        margin-bottom: 15px;
+        border-radius: 8px;
+    }
+
+    .dashboard-header {
+        flex-direction: column; /* Empilha título e botão */
+        align-items: center;
+        margin-bottom: 25px;
+    }
+
+    .dashboard-header h1 {
+        margin-bottom: 15px; /* Espaço entre o título e o botão Sair */
+        font-size: 2em;
+    }
+
+    .dashboard-header .header-button {
+        width: 100%; /* Botão Sair ocupa 100% em mobile */
+        max-width: 200px; /* Limita a largura para não ficar gigante */
+        font-size: 1em;
+        padding: 10px 15px;
+    }
+
+    .filter-controls {
+        flex-direction: column; /* Empilha filtro e botão Consultar */
+        gap: 15px; /* Reduz o espaço entre eles */
+        margin-bottom: 25px;
+    }
+
+    .filter-group {
+        width: 100%; /* Ocupa 100% da largura */
+    }
+
+    select {
+        height: 50px;
+        font-size: 1em;
+        padding: 12px 15px;
+    }
+
+    button#consultarButton {
+        width: 100%; /* Botão Consultar ocupa 100% em mobile */
+        padding: 12px 20px;
+        font-size: 1em;
+    }
+
+    #dashboardMessage {
+        font-size: 1em;
+        margin-top: 25px;
+    }
+
+    .data-table {
+        border-radius: 8px;
+        border: none;
+    }
+
+    .data-table thead {
+        display: none;
+    }
+
+    .data-table, .data-table tbody, .data-table tr, .data-table td {
+        display: block;
+        width: 100%;
+    }
+
+    .data-table tr {
+        margin-bottom: 15px;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        box-shadow: 0 2px 8px var(--shadow-light);
+    }
+
+    .data-table td {
+        text-align: right;
+        padding-left: 50%;
+        position: relative;
+        border-bottom: 1px dashed #e9ecef;
+    }
+
+    .data-table td:last-child {
+        border-bottom: none;
+    }
+
+    .data-table td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 15px;
+        width: calc(50% - 30px);
+        padding-right: 10px;
+        white-space: nowrap;
+        text-align: left;
+        font-weight: 700;
+        color: var(--primary-blue);
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
