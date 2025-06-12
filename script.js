@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzEAxo7Vhyq5YQgLx6M4YB17X4onpl91JIw5m2exzF8GE-L74jHwEso89Eq7hsi8_nEpA/exec';
 
     form.addEventListener('submit', async (event) => {
-        event.preventDefault(); // Impede o envio padrão do formulário
+        event.preventDefault();
 
         mensagemDiv.textContent = 'Registrando...';
         mensagemDiv.style.color = '#007bff'; // Azul para "registrando"
