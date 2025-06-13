@@ -5,23 +5,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const filtroProfissionalSelect = document.getElementById('filtroProfissional');
     const logoutButton = document.getElementById('logoutButton');
 
-    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzEAxo7Vhyq5YQgLx6M4YB17X4onpl91JIw5m2exzF8GE-L74jHwEso89Eq7hsi8_nEpA/exec'; // **VERIFIQUE SE ESTA URL ESTÁ ATUALIZADA COM A SUA**
+    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzI_AnXFV0LQzWsWqg9i7B1s0gR6oqBOIbpGYbrBOxNJIPOvFOvneUfwnKX2xP8ITLLhQ/exec';
 
-    const loggedInUser = localStorage.getItem('loggedInUser'); // Obtém o usuário curto logado
+    const loggedInUser = localStorage.getItem('loggedInUser');
 
     if (localStorage.getItem('loggedIn') !== 'true' || !loggedInUser) {
         window.location.href = 'login.html';
         return;
     }
 
-    // Exibir o nome do usuário logado (opcional)
-    // const welcomeMessage = document.createElement('p');
-    // welcomeMessage.textContent = `Bem-vindo(a), ${loggedInUser}!`;
-    // resultadosDiv.before(welcomeMessage); // Adiciona antes dos resultados
-
     async function loadProfissionais() {
         try {
-            const response = await fetch(`${WEB_APP_URL}?action=getProfissionais`);
+            const response = await fetch(`${WEB_APP_URL}?action=getProfissionaisFilter`);
             const data = await response.json();
 
             if (data.status === 'success' && data.profissionais) {
@@ -94,11 +89,16 @@ document.addEventListener('DOMContentLoaded', () => {
             row.forEach((cell, index) => {
                 const headerName = headers[index];
 
-                if (headerName === 'Data/Hora' || headerName === 'Timestamp') { // Ajuste para o nome real da sua coluna de data/hora
+                // Verifica se o cabeçalho da coluna é 'DATA E HORA DE INCLUSÃO' ou similar
+                // O nome da coluna pode variar dependendo do que o Apps Script retorna nos headers.
+                // Ajuste 'DATA E HORA DE INCLUSÃO' para o nome exato se for diferente.
+                if (headerName === 'DATA E HORA DE INCLUSÃO' || headerName === 'Timestamp' || headerName.includes('Data')) {
                     try {
                         const date = new Date(cell);
+                        // Formata para data e hora local do Brasil
                         tableHtml += `<td data-label="${headerName}">${date.toLocaleString('pt-BR')}</td>`;
                     } catch (e) {
+                        // Se houver erro na conversão (data inválida), exibe o valor original
                         tableHtml += `<td data-label="${headerName}">${cell}</td>`;
                     }
                 } else {

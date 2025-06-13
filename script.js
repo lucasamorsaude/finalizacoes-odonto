@@ -1,9 +1,33 @@
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('procedimentoForm');
     const mensagemDiv = document.getElementById('mensagem');
+    const profissionalInput = document.getElementById('profissional'); // Referência ao input
+    const profissionaisDatalist = document.getElementById('profissionaisList'); // Referência ao datalist
 
     // **Substitua pela URL do seu Aplicativo da Web do Apps Script**
-    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzEAxo7Vhyq5YQgLx6M4YB17X4onpl91JIw5m2exzF8GE-L74jHwEso89Eq7hsi8_nEpA/exec';
+    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzI_AnXFV0LQzWsWqg9i7B1s0gR6oqBOIbpGYbrBOxNJIPOvFOvneUfwnKX2xP8ITLLhQ/exec';
+
+    // Lista de profissionais para o datalist (pode ser carregada dinamicamente)
+    const profissionais = [
+        "Dr. Lair Felipe Faria Frederico",
+        "Dr. Wesley Gutierre Resende",
+        "Dra. Ana Flávia Campos",
+        "Dra. Barbara Gleice Souza Pereira",
+        "Dra. Eduarda Nascimento Palumbo",
+        "Dra. Isabela Fernandes Serpa",
+        "Dra. Mariana David Silva",
+        "Dra. Mirele Santos Seni",
+        "Dra. Nângila Kennya Souza de Carvalho",
+        "Dra. Naruna Luany Resende Campos",
+        "Dra. Rafaela Carolina Nascimento"
+    ];
+
+    // Popula o datalist
+    profissionais.forEach(profissional => {
+        const option = document.createElement('option');
+        option.value = profissional;
+        profissionaisDatalist.appendChild(option);
+    });
 
     form.addEventListener('submit', async (event) => {
         event.preventDefault();
@@ -13,7 +37,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const paciente = document.getElementById('paciente').value;
         const procedimento = document.getElementById('procedimento').value;
-        const profissional = document.getElementById('profissional').value;
+        const profissional = profissionalInput.value; // Pega o valor do input
+
+        // Validação simples para garantir que o profissional selecionado está na lista
+        if (!profissionais.includes(profissional)) {
+            mensagemDiv.textContent = 'Profissional inválido. Por favor, selecione um da lista.';
+            mensagemDiv.style.color = '#dc3545';
+            return;
+        }
 
         // Cria um objeto FormData para enviar os dados
         const formData = new FormData();

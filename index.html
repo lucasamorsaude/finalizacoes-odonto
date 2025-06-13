@@ -4,42 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Finalização de Procedimento - AmorSaude</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="index.css">
 </head>
-<body>
+<body class="index-page">
     <div class="container">
-        <h1>Registrar Procedimento</h1>
-        <form id="procedimentoForm">
-            <div class="form-group">
-                <label for="paciente">Nome do Paciente:</label>
-                <input type="text" id="paciente" name="paciente" required placeholder="Digite o nome completo do paciente">
+        <header class="page-header">
+            <h1 class="page-title">Registrar Procedimento</h1>
+        </header>
+        <form id="procedimentoForm" class="form">
+            <div class="form-grid"> <div class="form-group">
+                    <label for="paciente" class="form-label">Nome do Paciente:</label>
+                    <input type="text" id="paciente" name="paciente" required placeholder="Digite o nome completo do paciente" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label for="procedimento" class="form-label">Procedimento:</label>
+                    <input type="text" id="procedimento" name="procedimento" required placeholder="Digite o procedimento realizado" class="form-input">
+                </div>
+                <div class="form-group full-width"> <label for="profissional" class="form-label">Nome do Profissional:</label>
+                    <input type="text" id="profissional" name="profissional" required placeholder="Digite ou selecione o profissional" class="form-input" list="profissionaisList">
+                    <datalist id="profissionaisList">
+                        </datalist>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="procedimento">Procedimento:</label>
-                <input type="text" id="procedimento" name="procedimento" required placeholder="Digite o procedimento realizado">
-            </div>
-            <div class="form-group">
-                <label for="profissional">Nome do Profissional:</label>
-                <select id="profissional" name="profissional" required>
-                    <option value="" disabled selected>Selecione o profissional</option>
-                    <option value="Dr. Lair Felipe Faria Frederico">Dr. Lair Felipe Faria Frederico</option>
-                    <option value="Dr. Wesley Gutierre Resende">Dr. Wesley Gutierre Resende</option>
-                    <option value="Dra. Ana Flávia Campos">Dra. Ana Flávia Campos</option>
-                    <option value="Dra. Barbara Gleice Souza Pereira">Dra. Barbara Gleice Souza Pereira</option>
-                    <option value="Dra. Eduarda Nascimento Palumbo">Dra. Eduarda Nascimento Palumbo</option>
-                    <option value="Dra. Isabela Fernandes Serpa">Dra. Isabela Fernandes Serpa</option>
-                    <option value="Dra. Mariana David Silva">Dra. Mariana David Silva</option>
-                    <option value="Dra. Mirele Santos Seni">Dra. Mirele Santos Seni</option>
-                    <option value="Dra. Nângila Kennya Souza de Carvalho">Dra. Nângila Kennya Souza de Carvalho</option>
-                    <option value="Dra. Naruna Luany Resende Campos">Dra. Naruna Luany Resende Campos</option>
-                    <option value="Dra. Rafaela Carolina Nascimento">Dra. Rafaela Carolina Nascimento</option>
-                    <option value="Dra. Sarah Bruna Almeida Aquino de Faria">Dra. Sarah Bruna Almeida Aquino de Faria</option>
-                </select>
-            </div>
-            <button type="submit">Registrar Finalização</button>
-            <p id="mensagem"></p>
+            <button type="submit" class="btn btn-primary">Registrar Finalização</button>
+            <p id="mensagem" class="form-message"></p>
         </form>
-        <button id="loginButton" style="background-color: #007bff; margin-top: 20px;">Acessar Consulta</button>
+        <button id="loginButton" class="btn btn-secondary">Acessar Consulta</button>
     </div>
 
     <script src="script.js"></script>

@@ -1,19 +1,20 @@
-/* dashboard.css - Estilos Profissionais */
+/* dashboard.css - Estilos Profissionais Reformulados - Tentativa 2 */
 
 :root {
     --primary-blue: #007bff;
-    --secondary-blue: #e0f2f7;
-    --dark-blue: #0056b3;
+    --secondary-blue: #e0f2f7; /* Cor de fundo clara */
+    --accent-blue: #0056b3; /* Azul mais escuro para hover */
     --green-success: #28a745;
     --green-dark: #218838;
     --red-danger: #dc3545;
     --red-dark: #c82333;
     --text-dark: #343a40;
     --text-medium: #6c757d;
-    --light-grey: #f8f9fa;
+    --light-grey: #f8f9fa; /* Fundo de input/linhas alternadas */
     --border-color: #dee2e6;
-    --shadow-light: rgba(0, 0, 0, 0.08);
-    --shadow-medium: rgba(0, 0, 0, 0.15);
+    --shadow-light: rgba(0, 0, 0, 0.05);
+    --shadow-medium: rgba(0, 0, 0, 0.12);
+    --spacing-unit: 1rem; /* Unidade base de espaçamento (16px) */
 }
 
 body.dashboard-page {
@@ -21,61 +22,60 @@ body.dashboard-page {
     background: linear-gradient(135deg, var(--secondary-blue) 0%, #c1e4f4 100%);
     display: flex;
     justify-content: center;
-    align-items: flex-start;
+    align-items: flex-start; /* Alinha ao topo para permitir rolagem */
     min-height: 100vh;
     margin: 0;
     color: var(--text-dark);
-    padding: 30px 20px;
+    padding: calc(var(--spacing-unit) * 2); /* 32px de padding geral */
     box-sizing: border-box;
     overflow-y: auto;
 }
 
-body.dashboard-page .container {
-    background-color: #ffffff;
-    padding: 40px;
+.container {
+    background-color: var(--container-bg);
+    padding: calc(var(--spacing-unit) * 2.5); /* 40px */
     border-radius: 12px;
     box-shadow: 0 10px 30px var(--shadow-medium);
     width: 100%;
     max-width: 1200px;
     text-align: center;
     box-sizing: border-box;
-    margin-top: 30px;
-    margin-bottom: 30px;
+    margin-top: calc(var(--spacing-unit) * 2); /* 32px de margem superior */
+    margin-bottom: calc(var(--spacing-unit) * 2); /* 32px de margem inferior */
     transition: all 0.3s ease;
-    position: relative; /* Adicionado para posicionamento absoluto do botão Sair */
 }
 
-/* NOVO: Estilos para o cabeçalho (título e botão Sair) */
+/* Header do Dashboard */
 .dashboard-header {
     display: flex;
-    justify-content: space-between; /* Alinha o título à esquerda e o botão à direita */
+    justify-content: space-between;
     align-items: center;
-    margin-bottom: 35px;
-    position: relative; /* Para garantir que o botão Sair flutue corretamente */
+    margin-bottom: calc(var(--spacing-unit) * 2.5); /* 40px */
+    padding-bottom: var(--spacing-unit);
+    border-bottom: 1px solid var(--border-color);
 }
 
 .dashboard-header h1 {
     color: var(--primary-blue);
-    margin: 0; /* Remove margem padrão do h1 para flexbox */
+    margin: 0;
     font-size: 2.5em;
     font-weight: 700;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.03em;
 }
 
-/* NOVO: Estilo para o botão Sair no cabeçalho */
+/* Botão Sair no Header */
 .dashboard-header .header-button {
-    background-color: var(--red-danger); /* Cor vermelha para Sair */
+    background-color: var(--red-danger);
     color: white;
-    padding: 8px 18px; /* Padding menor para o botão do topo */
+    padding: calc(var(--spacing-unit) * 0.75) calc(var(--spacing-unit) * 1.25); /* 12px 20px */
     border: none;
-    border-radius: 6px; /* Bordas mais sutis */
+    border-radius: 6px;
     cursor: pointer;
-    font-size: 0.95em; /* Fonte menor */
-    font-weight: 600; /* Menos negrito */
+    font-size: 0.95em;
+    font-weight: 600;
     transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
-    width: auto; /* Permite que o botão se ajuste ao conteúdo */
-    margin-top: 0; /* Remove margem superior */
-    box-shadow: 0 2px 5px var(--shadow-light); /* Sombra mais discreta */
+    width: auto;
+    box-shadow: 0 2px 5px var(--shadow-light);
 }
 
 .dashboard-header .header-button:hover {
@@ -89,38 +89,40 @@ body.dashboard-page .container {
     box-shadow: 0 1px 3px var(--shadow-light);
 }
 
-
-/* NOVO: Estilos para o grupo de filtro e botão Consultar lado a lado */
+/* Seção de Filtros */
 .filter-controls {
     display: flex;
-    gap: 20px; /* Espaço entre os elementos */
-    align-items: flex-end; /* Alinha a base dos elementos */
-    margin-bottom: 30px; /* Espaço antes da tabela */
-    flex-wrap: wrap; /* Permite quebrar linha em telas pequenas */
+    align-items: flex-end; /* Alinha os itens pela base */
+    gap: calc(var(--spacing-unit) * 1.5); /* 24px de espaçamento entre os elementos */
+    margin-bottom: calc(var(--spacing-unit) * 2.5); /* 40px antes dos resultados */
+    flex-wrap: wrap; /* Permite quebra de linha em telas pequenas */
+    justify-content: flex-start; /* Alinha os itens à esquerda */
+    width: 100%; /* Garante que a div ocupe a largura total do container */
 }
 
-.filter-group {
-    flex-grow: 1; /* Permite que o select ocupe o máximo de espaço */
-    margin-bottom: 0; /* Remove a margem inferior para flexbox */
+.form-group.filter-group {
+    flex-grow: 1; /* Permite que o select cresça e ocupe o espaço disponível */
+    min-width: 250px; /* Largura mínima para o campo de filtro */
+    margin-bottom: 0; /* Remove a margem inferior redundante com gap */
+    text-align: left; /* Garante que o label e select fiquem alinhados à esquerda dentro do grupo */
 }
 
-/* Ajustes gerais de labels e selects que se aplicam a todas as páginas ou são genéricos */
 label {
     display: block;
-    margin-bottom: 10px;
+    margin-bottom: calc(var(--spacing-unit) * 0.5); /* 8px */
     font-weight: 600;
     color: var(--text-medium);
-    font-size: 1em;
+    font-size: 0.95em;
 }
 
 select {
     width: 100%;
-    padding: 14px 18px;
+    padding: 12px 18px;
     border: 1px solid var(--border-color);
     border-radius: 8px;
     box-sizing: border-box;
-    font-size: 1.05em;
-    height: 52px;
+    font-size: 1em;
+    height: 48px; /* Altura padronizada */
     background-color: var(--light-grey);
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
     appearance: none;
@@ -128,30 +130,31 @@ select {
     -moz-appearance: none;
     background-image: url('data:image/svg+xml;utf8,<svg fill="%23007bff" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
     background-repeat: no-repeat;
-    background-position: right 18px center;
+    background-position: right 15px center;
     background-size: 20px;
     cursor: pointer;
 }
 
 select:focus {
     border-color: var(--primary-blue);
-    box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.2);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
     outline: none;
 }
 
 button#consultarButton {
     background-color: var(--green-success);
     color: white;
-    padding: 15px 30px; /* Mantém o padding maior para o botão de consultar */
+    padding: 12px 25px; /* Padding ajustado para o botão */
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    font-size: 1.15em;
+    font-size: 1em; /* Tamanho da fonte ajustado */
     font-weight: 700;
     transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
-    width: auto; /* Para que o botão se ajuste ao conteúdo quando lado a lado */
-    margin-top: 0; /* Remove margem superior para alinhar */
+    width: auto;
+    margin-top: 0; /* Remover margem superior para flexbox */
     box-shadow: 0 4px 10px var(--shadow-light);
+    height: 48px; /* Altura padronizada com o select */
 }
 
 button#consultarButton:hover {
@@ -165,11 +168,17 @@ button#consultarButton:active {
     box-shadow: 0 2px 5px var(--shadow-light);
 }
 
+/* Seção de Resultados e Mensagens */
+#resultados {
+    margin-top: calc(var(--spacing-unit) * 2); /* 32px */
+    text-align: left;
+}
+
 #dashboardMessage {
-    margin-top: 30px;
+    margin-top: calc(var(--spacing-unit) * 1.5); /* 24px */
     font-weight: 600;
-    font-size: 1.1em;
-    color: var(--text-dark);
+    font-size: 1em;
+    text-align: center;
 }
 
 #dashboardMessage[style*="success"] {
@@ -180,12 +189,12 @@ button#consultarButton:active {
     color: var(--red-danger) !important;
 }
 
-/* Estilos para a Tabela de Resultados (mantidos) */
+/* Estilos para a Tabela de Resultados */
 .data-table {
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
-    margin-top: 35px;
+    margin-top: calc(var(--spacing-unit) * 2);
     box-shadow: 0 8px 20px var(--shadow-light);
     background-color: #ffffff;
     border-radius: 12px;
@@ -195,7 +204,7 @@ button#consultarButton:active {
 
 .data-table th,
 .data-table td {
-    padding: 15px 20px;
+    padding: calc(var(--spacing-unit) * 1.2); /* 19.2px */
     text-align: left;
     border-bottom: 1px solid #f0f0f0;
 }
@@ -205,7 +214,7 @@ button#consultarButton:active {
     color: white;
     font-weight: 700;
     text-transform: uppercase;
-    font-size: 0.9em;
+    font-size: 0.85em;
     letter-spacing: 0.05em;
     position: sticky;
     top: 0;
@@ -223,72 +232,79 @@ button#consultarButton:active {
 
 .data-table td {
     color: var(--text-dark);
-    font-size: 0.98em;
+    font-size: 0.9em;
     line-height: 1.4;
 }
 
 /* Responsividade para telas menores (smartphones) */
 @media (max-width: 768px) {
     body.dashboard-page {
-        padding: 15px;
+        padding: var(--spacing-unit);
         align-items: flex-start;
     }
 
-    body.dashboard-page .container {
-        padding: 25px;
-        margin-top: 15px;
-        margin-bottom: 15px;
+    .container {
+        padding: calc(var(--spacing-unit) * 1.5);
+        margin-top: var(--spacing-unit);
+        margin-bottom: var(--spacing-unit);
         border-radius: 8px;
+        box-shadow: none;
     }
 
     .dashboard-header {
-        flex-direction: column; /* Empilha título e botão */
-        align-items: center;
-        margin-bottom: 25px;
+        flex-direction: column;
+        align-items: flex-start;
+        margin-bottom: calc(var(--spacing-unit) * 1.5);
+        padding-bottom: calc(var(--spacing-unit) * 0.75);
     }
 
     .dashboard-header h1 {
-        margin-bottom: 15px; /* Espaço entre o título e o botão Sair */
         font-size: 2em;
+        margin-bottom: var(--spacing-unit);
+        text-align: left;
+        width: 100%;
     }
 
-    .dashboard-header .header-button {
-        width: 100%; /* Botão Sair ocupa 100% em mobile */
-        max-width: 200px; /* Limita a largura para não ficar gigante */
-        font-size: 1em;
-        padding: 10px 15px;
+    .header-button {
+        width: 100%;
+        max-width: 180px;
+        align-self: flex-start;
     }
 
     .filter-controls {
-        flex-direction: column; /* Empilha filtro e botão Consultar */
-        gap: 15px; /* Reduz o espaço entre eles */
-        margin-bottom: 25px;
+        flex-direction: column;
+        gap: var(--spacing-unit);
+        margin-bottom: calc(var(--spacing-unit) * 1.5);
+        align-items: stretch;
     }
 
-    .filter-group {
-        width: 100%; /* Ocupa 100% da largura */
+    .form-group.filter-group {
+        width: 100%;
+        min-width: unset; /* Remove a largura mínima em mobile */
     }
 
-    select {
-        height: 50px;
-        font-size: 1em;
-        padding: 12px 15px;
-    }
-
+    select,
     button#consultarButton {
-        width: 100%; /* Botão Consultar ocupa 100% em mobile */
-        padding: 12px 20px;
+        width: 100%;
+        padding: 12px 18px;
         font-size: 1em;
+        height: 48px; /* Garante altura consistente */
+    }
+
+    #resultados {
+        margin-top: var(--spacing-unit);
     }
 
     #dashboardMessage {
-        font-size: 1em;
-        margin-top: 25px;
+        font-size: 0.9em;
+        margin-top: var(--spacing-unit);
     }
 
+    /* Responsividade para a tabela em telas pequenas */
     .data-table {
         border-radius: 8px;
         border: none;
+        box-shadow: 0 4px 15px var(--shadow-light);
     }
 
     .data-table thead {
@@ -301,10 +317,11 @@ button#consultarButton:active {
     }
 
     .data-table tr {
-        margin-bottom: 15px;
+        margin-bottom: var(--spacing-unit);
         border: 1px solid var(--border-color);
         border-radius: 8px;
-        box-shadow: 0 2px 8px var(--shadow-light);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        overflow: hidden;
     }
 
     .data-table td {
@@ -312,6 +329,7 @@ button#consultarButton:active {
         padding-left: 50%;
         position: relative;
         border-bottom: 1px dashed #e9ecef;
+        font-size: 0.95em;
     }
 
     .data-table td:last-child {
@@ -321,9 +339,9 @@ button#consultarButton:active {
     .data-table td::before {
         content: attr(data-label);
         position: absolute;
-        left: 15px;
-        width: calc(50% - 30px);
-        padding-right: 10px;
+        left: var(--spacing-unit);
+        width: calc(50% - var(--spacing-unit) * 2);
+        padding-right: var(--spacing-unit) / 2;
         white-space: nowrap;
         text-align: left;
         font-weight: 700;

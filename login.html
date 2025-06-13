@@ -4,25 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - AmorSaude</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="login.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
-<body>
+<body class="login-page">
     <div class="container">
-        <h1>Login</h1>
-        <form id="loginForm">
+        <header class="login-header">
+            <h1 class="login-title">Acesso Restrito</h1>
+        </header>
+        <form id="loginForm" class="login-form">
             <div class="form-group">
-                <label for="username">Usuário:</label>
-                <input type="text" id="username" name="username" required placeholder="Digite seu usuário">
+                <label for="username" class="form-label">Usuário:</label>
+                <input type="text" id="username" name="username" required placeholder="Digite seu usuário" class="form-input">
             </div>
-            <div class="form-group">
-                <label for="password">Senha:</label>
-                <input type="password" id="password" name="password" required placeholder="Digite sua senha">
+            <div class="form-group password-group"> <label for="password" class="form-label">Senha:</label>
+                <input type="password" id="password" name="password" required placeholder="Digite sua senha" class="form-input">
+                <span class="toggle-password" id="togglePassword">
+                    <i class="fas fa-eye"></i> </span>
             </div>
-            <button type="submit">Entrar</button>
-            <p id="loginMessage"></p>
+            <button type="submit" class="btn btn-primary">Entrar</button>
+            <p id="loginMessage" class="login-message"></p>
         </form>
 
-        <button id="backToIndexButton" style="background-color: #6c757d; margin-top: 10px;">Voltar para Início</button>
+        <button id="backToIndexButton" class="btn btn-secondary">Voltar para Início</button>
     </div>
 
     <script src="login.js"></script>
