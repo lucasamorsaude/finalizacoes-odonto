@@ -19,7 +19,8 @@ document.addEventListener('DOMContentLoaded', () => {
         "Dra. Mirele Santos Seni",
         "Dra. Nângila Kennya Souza de Carvalho",
         "Dra. Naruna Luany Resende Campos",
-        "Dra. Rafaela Carolina Nascimento"
+        "Dra. Rafaela Carolina Nascimento",
+        "Dra. Ana Carolina Ribeiro Pereira"
     ];
 
     // Popula o datalist
