@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Consulta de Procedimentos - AmorSaude</title>
+    <title>Consulta de Procedimentos - AmorSaúde</title>
     <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/5893/5893736.png" type="image/png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,35 +12,42 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body class="dashboard-page">
-    <div class="container">
-        <header class="dashboard-header">
-            <h1>Consulta de Procedimentos</h1>
-            <div class="header-actions">
-                <button id="adminButton" class="header-button header-button--admin" style="display:none;">Admin</button>
-                <button id="logoutButton" class="header-button">Sair</button>
-            </div>
-        </header>
 
+    <header class="dashboard-header">
+        <h1>Consulta de Procedimentos</h1>
+        <div class="header-actions">
+            <button id="adminButton" class="header-button header-button--admin" style="display:none;">
+                <i class="fas fa-users-cog"></i> Admin
+            </button>
+            <button id="logoutButton" class="header-button">
+                <i class="fas fa-sign-out-alt"></i> Sair
+            </button>
+        </div>
+    </header>
+
+    <div class="container">
         <div class="filter-controls">
             <div class="form-group filter-group">
-                <label for="filtroUnidade">Filtrar por Unidade:</label>
+                <label for="filtroUnidade">Unidade</label>
                 <select id="filtroUnidade" name="filtroUnidade">
-                    <option value="">Todos</option>
+                    <option value="">Todas</option>
                     <option value="SJDR">SJDR</option>
                     <option value="SJDR APOIO">SJDR APOIO</option>
                 </select>
             </div>
             <div class="form-group filter-group">
-                <label for="filtroProfissional">Filtrar por Profissional:</label>
+                <label for="filtroProfissional">Profissional</label>
                 <select id="filtroProfissional" name="filtroProfissional">
                     <option value="">Todos</option>
                 </select>
             </div>
-            <button id="consultarButton">Consultar</button>
+            <button id="consultarButton">
+                <i class="fas fa-search"></i> Consultar
+            </button>
         </div>
 
-        <div id="resultados" style="margin-top: 30px; text-align: left;">
-            <p>Selecione um filtro e clique em "Consultar" para ver os dados.</p>
+        <div id="resultados">
+            <p>Selecione os filtros e clique em "Consultar" para ver os dados.</p>
         </div>
         <p id="dashboardMessage"></p>
     </div>

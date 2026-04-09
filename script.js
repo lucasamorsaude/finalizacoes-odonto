@@ -8,7 +8,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let profissionaisValidos = [];
 
-    // Carrega profissionais dinamicamente da aba Usuarios (somente ativos)
+    // Bloqueia o campo até os profissionais carregarem
+    profissionalInput.disabled = true;
+    profissionalInput.placeholder = 'Carregando profissionais...';
+
     async function loadProfissionais() {
         try {
             const response = await fetch(`${WEB_APP_URL}?action=getProfissionais`);
@@ -22,13 +25,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     option.value = prof;
                     profissionaisDatalist.appendChild(option);
                 });
+                profissionalInput.disabled = false;
                 profissionalInput.placeholder = 'Digite ou selecione o profissional';
             } else {
                 profissionalInput.placeholder = 'Erro ao carregar profissionais';
             }
         } catch (error) {
             console.error('Erro ao carregar profissionais:', error);
-            profissionalInput.placeholder = 'Erro de conexão';
+            profissionalInput.placeholder = 'Erro de conexão — recarregue a página';
         }
     }
 
