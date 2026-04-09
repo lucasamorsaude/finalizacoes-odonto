@@ -22,6 +22,12 @@ function doGet(e) {
 
     // Lista de profissionais ativos para o formulário de registro
     if (action === 'getProfissionais') {
+        const cache = CacheService.getScriptCache();
+        const cached = cache.get('profissionais_ativos');
+        if (cached) {
+            return json({ status: 'success', profissionais: JSON.parse(cached) });
+        }
+
         const usersSheet = ss.getSheetByName(USERS_SHEET_NAME);
         const usersData = usersSheet.getDataRange().getValues();
         const profCol = usersData[0].indexOf('Profissional');
@@ -37,6 +43,7 @@ function doGet(e) {
                 .map(row => row[profCol])
         )].filter(p => p && p !== 'admin');
 
+        cache.put('profissionais_ativos', JSON.stringify(profissionais), 21600); // 6 horas
         return json({ status: 'success', profissionais });
     }
 
@@ -141,6 +148,7 @@ function doPost(e) {
             true,
             e.parameter.unidade || ''
         ]);
+        CacheService.getScriptCache().remove('profissionais_ativos');
         return json({ status: 'success', message: 'Usuário criado com sucesso.' });
     }
 
@@ -165,6 +173,7 @@ function doPost(e) {
                 if (unidadeCol !== -1 && e.parameter.unidade !== undefined) {
                     usersSheet.getRange(rowNum, unidadeCol + 1).setValue(e.parameter.unidade);
                 }
+                CacheService.getScriptCache().remove('profissionais_ativos');
                 return json({ status: 'success', message: 'Usuário atualizado.' });
             }
         }
@@ -191,6 +200,7 @@ function doPost(e) {
                 const current = usersData[i][ativoCol] === true || String(usersData[i][ativoCol]).toUpperCase() === 'TRUE';
                 const newValue = !current;
                 usersSheet.getRange(i + 1, ativoCol + 1).setValue(newValue);
+                CacheService.getScriptCache().remove('profissionais_ativos');
                 return json({ status: 'success', ativo: newValue });
             }
         }

@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const profissionalInput = document.getElementById('profissional');
     const profissionaisDatalist = document.getElementById('profissionaisList');
 
-    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwO2BepPpPSkey10_A8YaXdla_TwcK6Euk1ZZMkKZndub16G6fNNnz7Q0IOimtU7Ln48w/exec';
+    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzZ4pDx74e82rT2TJQevF-DB-cKGIuzPvTQASLqytmA0AyRivmjgvuprlAOI3ye2zpySQ/exec';
 
     let profissionaisValidos = [];
 
