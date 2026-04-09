@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const passwordInput = document.getElementById('password'); // Novo: Referência ao campo de senha
     const togglePassword = document.getElementById('togglePassword'); // Novo: Referência ao ícone do olhinho
 
-    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxdmgw1jjZR153grD_A2SjjBLt1Z65E76pfxzfb7wHRO2P3yqNktjcP3USSvTM3cPGaLw/exec';
+    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwO2BepPpPSkey10_A8YaXdla_TwcK6Euk1ZZMkKZndub16G6fNNnz7Q0IOimtU7Ln48w/exec';
 
     form.addEventListener('submit', async (event) => {
         event.preventDefault();
@@ -34,6 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 loginMessageDiv.style.color = '#28a745';
                 localStorage.setItem('loggedIn', 'true');
                 localStorage.setItem('loggedInUser', data.username);
+                localStorage.setItem('isAdmin', data.admin ? 'true' : 'false');
                 window.location.href = 'dashboard.html';
             } else {
                 loginMessageDiv.textContent = data.message;

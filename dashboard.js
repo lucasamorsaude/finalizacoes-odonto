@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const logoutButton = document.getElementById('logoutButton');
     const adminButton = document.getElementById('adminButton');
 
-    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxdmgw1jjZR153grD_A2SjjBLt1Z65E76pfxzfb7wHRO2P3yqNktjcP3USSvTM3cPGaLw/exec';
+    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwO2BepPpPSkey10_A8YaXdla_TwcK6Euk1ZZMkKZndub16G6fNNnz7Q0IOimtU7Ln48w/exec';
 
     const loggedInUser = localStorage.getItem('loggedInUser');
 
@@ -21,8 +21,8 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    // Exibe botão Admin apenas para o usuário admin
-    if (loggedInUser === 'admin') {
+    // Exibe botão Admin apenas para usuários admin
+    if (localStorage.getItem('isAdmin') === 'true') {
         adminButton.style.display = 'inline-block';
     }
 
@@ -176,6 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
     logoutButton.addEventListener('click', () => {
         localStorage.removeItem('loggedIn');
         localStorage.removeItem('loggedInUser');
+        localStorage.removeItem('isAdmin');
         window.location.href = 'login.html';
     });
 });

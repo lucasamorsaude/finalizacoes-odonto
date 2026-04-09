@@ -237,7 +237,8 @@ function handleLogin(e) {
                     return json({ status: 'error', message: 'Usuário inativo. Contate o administrador.' });
                 }
             }
-            return json({ status: 'success', message: 'Login bem-sucedido!', username });
+            const adminFlag = isAdmin(username);
+            return json({ status: 'success', message: 'Login bem-sucedido!', username, admin: adminFlag });
         }
     }
 

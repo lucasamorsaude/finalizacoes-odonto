@@ -1,10 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxdmgw1jjZR153grD_A2SjjBLt1Z65E76pfxzfb7wHRO2P3yqNktjcP3USSvTM3cPGaLw/exec';
+    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwO2BepPpPSkey10_A8YaXdla_TwcK6Euk1ZZMkKZndub16G6fNNnz7Q0IOimtU7Ln48w/exec';
 
     const loggedInUser = localStorage.getItem('loggedInUser');
 
     // Redireciona se não for admin
-    if (localStorage.getItem('loggedIn') !== 'true' || loggedInUser !== 'admin') {
+    if (localStorage.getItem('loggedIn') !== 'true' || localStorage.getItem('isAdmin') !== 'true') {
         window.location.href = 'login.html';
         return;
     }
@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('logoutButton').addEventListener('click', () => {
         localStorage.removeItem('loggedIn');
         localStorage.removeItem('loggedInUser');
+        localStorage.removeItem('isAdmin');
         window.location.href = 'login.html';
     });
 
