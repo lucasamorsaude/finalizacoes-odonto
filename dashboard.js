@@ -3,20 +3,32 @@ document.addEventListener('DOMContentLoaded', () => {
     const dashboardMessageDiv = document.getElementById('dashboardMessage');
     const consultarButton = document.getElementById('consultarButton');
     const filtroProfissionalSelect = document.getElementById('filtroProfissional');
+    const filtroUnidadeSelect = document.getElementById('filtroUnidade');
     const logoutButton = document.getElementById('logoutButton');
+    const adminButton = document.getElementById('adminButton');
 
-    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzI_AnXFV0LQzWsWqg9i7B1s0gR6oqBOIbpGYbrBOxNJIPOvFOvneUfwnKX2xP8ITLLhQ/exec';
+    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxdmgw1jjZR153grD_A2SjjBLt1Z65E76pfxzfb7wHRO2P3yqNktjcP3USSvTM3cPGaLw/exec';
 
     const loggedInUser = localStorage.getItem('loggedInUser');
 
-    let currentData = []; // Armazenar os dados atuais para ordenação
-    let sortDirectionDate = 'desc'; // 'asc' ou 'desc'
-    let sortDirectionStatus = 'asc'; // 'asc' ou 'desc'
+    let currentData = [];
+    let currentHeaders = [];
+    let sortDirectionDate = 'desc';
+    let sortDirectionStatus = 'asc';
 
     if (localStorage.getItem('loggedIn') !== 'true' || !loggedInUser) {
         window.location.href = 'login.html';
         return;
     }
+
+    // Exibe botão Admin apenas para o usuário admin
+    if (loggedInUser === 'admin') {
+        adminButton.style.display = 'inline-block';
+    }
+
+    adminButton.addEventListener('click', () => {
+        window.location.href = 'admin.html';
+    });
 
     async function loadProfissionais() {
         try {
@@ -33,13 +45,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             } else {
                 console.error('Erro ao carregar profissionais:', data.message);
-                dashboardMessageDiv.textContent = 'Erro ao carregar lista de profissionais.';
-                dashboardMessageDiv.style.color = '#dc3545';
             }
         } catch (error) {
             console.error('Erro de conexão ao carregar profissionais:', error);
-            dashboardMessageDiv.textContent = 'Erro de conexão ao carregar profissionais.';
-            dashboardMessageDiv.style.color = '#dc3545';
         }
     }
 
@@ -48,13 +56,17 @@ document.addEventListener('DOMContentLoaded', () => {
         dashboardMessageDiv.textContent = '';
 
         const profissionalSelecionado = filtroProfissionalSelect.value;
+        const unidadeSelecionada = filtroUnidadeSelect.value;
         const queryParams = new URLSearchParams();
-        
-        queryParams.append('usernameLogado', loggedInUser); 
+
         queryParams.append('action', 'getData');
+        queryParams.append('usernameLogado', loggedInUser);
 
         if (profissionalSelecionado && profissionalSelecionado !== 'Todos') {
             queryParams.append('profissional', profissionalSelecionado);
+        }
+        if (unidadeSelecionada && unidadeSelecionada !== 'Todos') {
+            queryParams.append('unidade', unidadeSelecionada);
         }
 
         try {
@@ -62,8 +74,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await response.json();
 
             if (data.status === 'success' && data.data) {
-                currentData = data.data; // Armazena os dados brutos
-                renderTable(data.headers, currentData); // Renderiza a tabela inicial
+                currentData = data.data;
+                currentHeaders = data.headers;
+                renderTable(currentHeaders, currentData);
             } else {
                 resultadosDiv.innerHTML = '<p>Nenhum dado encontrado ou erro na consulta.</p>';
                 dashboardMessageDiv.textContent = data.message || 'Erro ao consultar dados.';
@@ -87,16 +100,15 @@ document.addEventListener('DOMContentLoaded', () => {
         headers.forEach((header, index) => {
             if (header === 'DATA E HORA DE INCLUSÃO' || header === 'Timestamp' || header.includes('Data')) {
                 tableHtml += `<th data-column-index="${index}" data-sort-type="date">
-                                ${header} 
+                                ${header}
                                 <i class="fas ${sortDirectionDate === 'asc' ? 'fa-sort-up' : 'fa-sort-down'}" data-sort-by="date"></i>
                               </th>`;
             } else if (header === 'STATUS') {
                 tableHtml += `<th data-column-index="${index}" data-sort-type="status">
-                                ${header} 
+                                ${header}
                                 <i class="fas ${sortDirectionStatus === 'asc' ? 'fa-sort-alpha-up' : 'fa-sort-alpha-down'}" data-sort-by="status"></i>
                               </th>`;
-            }
-            else {
+            } else {
                 tableHtml += `<th>${header}</th>`;
             }
         });
@@ -106,7 +118,6 @@ document.addEventListener('DOMContentLoaded', () => {
             tableHtml += '<tr>';
             row.forEach((cell, index) => {
                 const headerName = headers[index];
-
                 if (headerName === 'DATA E HORA DE INCLUSÃO' || headerName === 'Timestamp' || headerName.includes('Data')) {
                     try {
                         const date = new Date(cell);
@@ -123,12 +134,10 @@ document.addEventListener('DOMContentLoaded', () => {
         tableHtml += '</tbody></table>';
         resultadosDiv.innerHTML = tableHtml;
 
-        // Adiciona event listeners para os cabeçalhos de ordenação
         document.querySelectorAll('.data-table th[data-sort-type]').forEach(headerCell => {
-            headerCell.addEventListener('click', (event) => {
+            headerCell.addEventListener('click', () => {
                 const sortType = headerCell.dataset.sortType;
                 const columnIndex = parseInt(headerCell.dataset.columnIndex);
-                
                 if (sortType === 'date') {
                     sortDataByDate(columnIndex);
                 } else if (sortType === 'status') {
@@ -142,39 +151,24 @@ document.addEventListener('DOMContentLoaded', () => {
         currentData.sort((a, b) => {
             const dateA = new Date(a[columnIndex]);
             const dateB = new Date(b[columnIndex]);
-            if (sortDirectionDate === 'asc') {
-                return dateA.getTime() - dateB.getTime();
-            } else {
-                return dateB.getTime() - dateA.getTime();
-            }
+            return sortDirectionDate === 'asc'
+                ? dateA.getTime() - dateB.getTime()
+                : dateB.getTime() - dateA.getTime();
         });
         sortDirectionDate = sortDirectionDate === 'asc' ? 'desc' : 'asc';
-        renderTable(getHeadersFromCurrentTable(), currentData); // Re-renderiza para atualizar ícone
+        renderTable(currentHeaders, currentData);
     }
 
     function sortDataByStatus(columnIndex) {
         currentData.sort((a, b) => {
             const statusA = a[columnIndex].toString().toLowerCase();
             const statusB = b[columnIndex].toString().toLowerCase();
-            if (sortDirectionStatus === 'asc') {
-                return statusA.localeCompare(statusB);
-            } else {
-                return statusB.localeCompare(statusA);
-            }
+            return sortDirectionStatus === 'asc'
+                ? statusA.localeCompare(statusB)
+                : statusB.localeCompare(statusA);
         });
         sortDirectionStatus = sortDirectionStatus === 'asc' ? 'desc' : 'asc';
-        renderTable(getHeadersFromCurrentTable(), currentData); // Re-renderiza para atualizar ícone
-    }
-
-    // Função para obter os headers da tabela já renderizada (necessário para re-renderizar)
-    function getHeadersFromCurrentTable() {
-        const headerElements = document.querySelectorAll('.data-table th');
-        return Array.from(headerElements).map(th => {
-            // Remove o texto do ícone para obter apenas o nome do cabeçalho
-            const text = th.textContent.trim();
-            // Remove o último espaço em branco se houver (para remover o texto do ícone)
-            return text.replace(/\s*[\u2190-\u21FF\u25BA\u25BC\uF000-\uF0FF]+$/, '').trim(); // Remove setas ou ícones do Font Awesome
-        });
+        renderTable(currentHeaders, currentData);
     }
 
     loadProfissionais();

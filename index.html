@@ -16,7 +16,16 @@
             <h1 class="page-title">Registrar Procedimento</h1>
         </header>
         <form id="procedimentoForm" class="form">
-            <div class="form-grid"> <div class="form-group">
+            <div class="form-grid">
+                <div class="form-group full-width">
+                    <label for="unidade" class="form-label">Unidade:</label>
+                    <select id="unidade" name="unidade" required class="form-input form-select">
+                        <option value="" disabled selected>Selecione a unidade</option>
+                        <option value="SJDR">SJDR</option>
+                        <option value="SJDR APOIO">SJDR APOIO</option>
+                    </select>
+                </div>
+                <div class="form-group">
                     <label for="paciente" class="form-label">Nome do Paciente:</label>
                     <input type="text" id="paciente" name="paciente" required placeholder="Digite o nome completo do paciente" class="form-input">
                 </div>
@@ -24,10 +33,10 @@
                     <label for="procedimento" class="form-label">Procedimento:</label>
                     <input type="text" id="procedimento" name="procedimento" required placeholder="Digite o procedimento realizado" class="form-input">
                 </div>
-                <div class="form-group full-width"> <label for="profissional" class="form-label">Nome do Profissional:</label>
-                    <input type="text" id="profissional" name="profissional" required placeholder="Digite ou selecione o profissional" class="form-input" list="profissionaisList">
-                    <datalist id="profissionaisList">
-                        </datalist>
+                <div class="form-group full-width">
+                    <label for="profissional" class="form-label">Nome do Profissional:</label>
+                    <input type="text" id="profissional" name="profissional" required placeholder="Carregando profissionais..." class="form-input" list="profissionaisList">
+                    <datalist id="profissionaisList"></datalist>
                 </div>
             </div>
             <button type="submit" class="btn btn-primary">Registrar Finalização</button>

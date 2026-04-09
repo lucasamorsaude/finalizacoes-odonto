@@ -63,6 +63,13 @@ body.dashboard-page {
     letter-spacing: -0.03em;
 }
 
+/* Agrupa os botões do header */
+.header-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
 /* Botão Sair no Header */
 .dashboard-header .header-button {
     background-color: var(--red-danger);
@@ -87,6 +94,14 @@ body.dashboard-page {
 .dashboard-header .header-button:active {
     transform: translateY(0);
     box-shadow: 0 1px 3px var(--shadow-light);
+}
+
+.dashboard-header .header-button--admin {
+    background-color: var(--primary-blue);
+}
+
+.dashboard-header .header-button--admin:hover {
+    background-color: var(--accent-blue);
 }
 
 /* Seção de Filtros */

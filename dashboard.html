@@ -15,10 +15,21 @@
     <div class="container">
         <header class="dashboard-header">
             <h1>Consulta de Procedimentos</h1>
-            <button id="logoutButton" class="header-button">Sair</button>
+            <div class="header-actions">
+                <button id="adminButton" class="header-button header-button--admin" style="display:none;">Admin</button>
+                <button id="logoutButton" class="header-button">Sair</button>
+            </div>
         </header>
 
         <div class="filter-controls">
+            <div class="form-group filter-group">
+                <label for="filtroUnidade">Filtrar por Unidade:</label>
+                <select id="filtroUnidade" name="filtroUnidade">
+                    <option value="">Todos</option>
+                    <option value="SJDR">SJDR</option>
+                    <option value="SJDR APOIO">SJDR APOIO</option>
+                </select>
+            </div>
             <div class="form-group filter-group">
                 <label for="filtroProfissional">Filtrar por Profissional:</label>
                 <select id="filtroProfissional" name="filtroProfissional">

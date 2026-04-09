@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Gestão de Usuários</title>
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/5893/5893736.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body class="dashboard-page">
+    <div class="container">
+        <header class="dashboard-header">
+            <h1>Gestão de Usuários</h1>
+            <div class="header-actions">
+                <button id="voltarButton" class="header-button header-button--admin">Voltar</button>
+                <button id="logoutButton" class="header-button">Sair</button>
+            </div>
+        </header>
+
+        <div class="admin-toolbar">
+            <button id="novoUsuarioButton" class="btn-admin btn-admin--primary">
+                <i class="fas fa-plus"></i> Novo Usuário
+            </button>
+            <p id="adminMessage" class="admin-message"></p>
+        </div>
+
+        <div id="tabelaUsuarios"></div>
+    </div>
+
+    <!-- Modal criar/editar usuário -->
+    <div id="modalOverlay" class="modal-overlay" style="display:none;">
+        <div class="modal">
+            <h2 id="modalTitulo">Novo Usuário</h2>
+            <form id="usuarioForm">
+                <input type="hidden" id="targetUsuario">
+                <div class="modal-field">
+                    <label for="inputUsuario">Usuário (login):</label>
+                    <input type="text" id="inputUsuario" required placeholder="Ex: dra.ana">
+                </div>
+                <div class="modal-field">
+                    <label for="inputSenha">Senha:</label>
+                    <input type="text" id="inputSenha" placeholder="Deixe em branco para não alterar">
+                </div>
+                <div class="modal-field">
+                    <label for="inputProfissional">Nome do Profissional:</label>
+                    <input type="text" id="inputProfissional" required placeholder="Ex: Dra. Ana Carolina Ribeiro Pereira">
+                </div>
+                <div class="modal-field">
+                    <label for="inputUnidade">Unidade:</label>
+                    <select id="inputUnidade">
+                        <option value="">Nenhuma</option>
+                        <option value="SJDR">SJDR</option>
+                        <option value="SJDR APOIO">SJDR APOIO</option>
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn-admin btn-admin--primary" id="modalSalvarBtn">Salvar</button>
+                    <button type="button" id="modalCancelarBtn" class="btn-admin btn-admin--secondary">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+</html>

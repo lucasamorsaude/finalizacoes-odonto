@@ -1,0 +1,199 @@
+/* admin.css - Estilos do painel administrativo */
+
+.admin-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.admin-message {
+    font-weight: 600;
+    font-size: 0.95em;
+    margin: 0;
+}
+
+/* Botões de ação admin */
+.btn-admin {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9em;
+    font-weight: 600;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-admin:hover {
+    transform: translateY(-1px);
+}
+
+.btn-admin:active {
+    transform: translateY(0);
+}
+
+.btn-admin--primary {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-admin--primary:hover {
+    background-color: #0056b3;
+}
+
+.btn-admin--secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn-admin--secondary:hover {
+    background-color: #545b62;
+}
+
+.btn-admin--danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-admin--danger:hover {
+    background-color: #c82333;
+}
+
+.btn-admin--success {
+    background-color: #28a745;
+    color: white;
+}
+
+.btn-admin--success:hover {
+    background-color: #218838;
+}
+
+.btn-admin:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Tabela admin */
+.admin-table .acoes-cell {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+/* Badges de status */
+.badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.8em;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+}
+
+.badge--ativo {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.badge--inativo {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+/* Modal */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    padding: 1rem;
+}
+
+.modal {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.modal h2 {
+    margin: 0 0 1.5rem;
+    color: #007bff;
+    font-size: 1.4em;
+}
+
+.modal-field {
+    margin-bottom: 1rem;
+    text-align: left;
+}
+
+.modal-field label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    font-size: 0.9em;
+    color: #495057;
+}
+
+.modal-field input,
+.modal-field select {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    font-size: 1em;
+    box-sizing: border-box;
+    background-color: #f8f9fa;
+    transition: border-color 0.2s;
+}
+
+.modal-field input:focus,
+.modal-field select:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+}
+
+.modal-field input:disabled {
+    background-color: #e9ecef;
+    color: #6c757d;
+    cursor: not-allowed;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 1.5rem;
+    justify-content: flex-end;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .admin-table .acoes-cell {
+        justify-content: flex-end;
+    }
+
+    .modal {
+        padding: 1.5rem;
+    }
+
+    .modal-actions {
+        flex-direction: column;
+    }
+
+    .modal-actions .btn-admin {
+        width: 100%;
+        justify-content: center;
+    }
+}
