@@ -357,7 +357,8 @@ select.entrada {
     border: 0; background: transparent; padding: 5px 12px; border-radius: 6px;
     font-size: 0.8125rem; font-weight: 600; color: var(--texto-2); cursor: pointer;
 }
-.segmentado button[aria-pressed="true"] { background: var(--superficie); color: var(--texto); box-shadow: var(--sombra-1); }
+.segmentado button[aria-pressed="true"] { background: var(--marca); color: var(--sobre-marca); box-shadow: var(--sombra-1); }
+.segmentado button:not([aria-pressed="true"]):hover { color: var(--texto); background: var(--superficie-hover); }
 
 /* ── Status ─────────────────────────────────────────────────────────────── */
 
