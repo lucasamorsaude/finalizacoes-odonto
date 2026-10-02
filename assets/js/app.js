@@ -2,7 +2,9 @@
 // Cada página tem <main class="conteudo" hidden> com o próprio conteúdo; aqui ele é encaixado no layout.
 import { sb, carregarPerfil, sair, UNIDADES, STATUS_ABERTOS } from './supabase.js';
 import { icone } from './icones.js';
-import { esc, iniciais, abrirModal, toast, botaoCarregando, preencherSelect, mensagemErro } from './ui.js';
+import {
+    esc, iniciais, abrirModal, toast, botaoCarregando, preencherSelect, mensagemErro, segmentado, botaoTema, ativarTema,
+} from './ui.js';
 
 const ITENS_MENU = [
     { tela: 'fila', href: 'fila.html', rotulo: 'Fila', icone: 'fila' },
@@ -47,7 +49,7 @@ function montarLayout(perfil, telaAtiva) {
     app.innerHTML = `
         <aside class="lateral" id="lateral" aria-label="Navegação">
             <a class="marca" href="fila.html">
-                <img src="assets/img/logo.svg" alt="">
+                <img src="assets/img/logo.png" alt="">
                 <div><strong>Finaliza Odonto</strong><span>AmorSaúde São João del-Rei</span></div>
             </a>
             <nav class="nav">
@@ -66,13 +68,15 @@ function montarLayout(perfil, telaAtiva) {
                     <strong title="${esc(nomeExibido)}">${esc(nomeExibido)}</strong>
                     <span>${perfil.is_admin ? 'Administrador' : 'Profissional'}</span>
                 </div>
+                ${botaoTema()}
                 <button type="button" class="btn btn--fantasma btn--icone btn--sm" data-sair aria-label="Sair" title="Sair">${icone('sair')}</button>
             </div>
         </aside>
         <div class="principal">
             <header class="topo-movel">
                 <button type="button" class="btn btn--fantasma btn--icone" data-abrir-menu aria-label="Abrir menu" aria-controls="lateral" aria-expanded="false">${icone('menu')}</button>
-                <a class="marca" href="fila.html"><img src="assets/img/logo.svg" alt=""><div><strong>Finaliza Odonto</strong></div></a>
+                <a class="marca" href="fila.html"><img src="assets/img/logo.png" alt=""><div><strong>Finaliza Odonto</strong></div></a>
+                ${botaoTema()}
                 <button type="button" class="btn btn--primario btn--icone" data-nova-finalizacao aria-label="Nova finalização">${icone('mais')}</button>
             </header>
         </div>`;
@@ -80,6 +84,7 @@ function montarLayout(perfil, telaAtiva) {
     app.querySelector('.principal').append(conteudo);
     document.body.prepend(app);
     conteudo.hidden = false;
+    ativarTema();
 
     app.querySelectorAll('[data-sair]').forEach(b => b.addEventListener('click', sair));
     app.querySelectorAll('[data-nova-finalizacao]').forEach(b => b.addEventListener('click', abrirNovaFinalizacao));
@@ -133,8 +138,8 @@ async function abrirNovaFinalizacao() {
         corpo: `
             <form id="form-nova" class="modal__form" novalidate>
                 <div class="campo">
-                    <label for="nova-unidade">Unidade</label>
-                    <select id="nova-unidade" class="entrada" required></select>
+                    <span class="rotulo" id="rotulo-nova-unidade">Unidade</span>
+                    <div id="nova-unidade" class="segmentado--bloco" aria-labelledby="rotulo-nova-unidade"></div>
                 </div>
                 ${perfil.is_admin ? `
                 <div class="campo">
@@ -161,7 +166,7 @@ async function abrirNovaFinalizacao() {
     const selProf = el.querySelector('#nova-profissional');
     const erro = el.querySelector('#nova-erro');
     form.style.cssText = 'display:flex;flex-direction:column;gap:14px';
-    preencherSelect(selUnidade, UNIDADES, { vazio: 'Selecione', valor: unidadePadrao });
+    segmentado(selUnidade, UNIDADES, { valor: unidadePadrao });
 
     if (selProf) {
         const { data } = await sb.rpc('listar_profissionais');

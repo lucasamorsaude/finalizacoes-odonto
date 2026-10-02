@@ -2,9 +2,10 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
+    <script>try { const t = localStorage.getItem('finaliza:tema'); if (t) document.documentElement.dataset.theme = t; } catch {}</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel · Finaliza Odonto</title>
-    <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="assets/img/logo.png" type="image/png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -29,9 +30,9 @@
                     <button type="button" data-dias="365">12 meses</button>
                 </div>
             </div>
-            <div class="campo" style="flex:0 1 200px">
-                <label for="f-unidade">Unidade</label>
-                <select id="f-unidade" class="entrada"></select>
+            <div class="campo" style="flex:0 0 auto">
+                <span class="rotulo" id="rotulo-unidade">Unidade</span>
+                <div id="f-unidade" aria-labelledby="rotulo-unidade"></div>
             </div>
             <div class="campo" id="campo-profissional" style="flex:0 1 280px" hidden>
                 <label for="f-profissional">Profissional</label>

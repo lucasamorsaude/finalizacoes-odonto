@@ -1,8 +1,10 @@
 import { sb, carregarPerfil, emailDoUsuario, PREFIXO_SENHA } from '../supabase.js';
 import { icone } from '../icones.js';
-import { aplicarIcones, botaoCarregando } from '../ui.js';
+import { aplicarIcones, botaoCarregando, botaoTema, ativarTema } from '../ui.js';
 
 aplicarIcones();
+document.body.insertAdjacentHTML('beforeend', botaoTema('tema-flutuante'));
+ativarTema();
 
 // Só volta para telas internas do próprio site
 const volta = new URLSearchParams(location.search).get('volta');

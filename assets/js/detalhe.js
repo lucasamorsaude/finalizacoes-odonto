@@ -10,9 +10,11 @@ import {
  * @param opcoes.admin se pode alterar
  * @param opcoes.statusInicial status pré-selecionado (ex.: abrir já em "Recusado")
  * @param opcoes.aoSalvar callback(registroAtualizado)
+ * @param opcoes.avisar mostra o aviso de "salvo" (desligue quando quem chama mostra o próprio)
  */
-export function abrirDetalhe(item, { admin = false, statusInicial = null, aoSalvar = null } = {}) {
+export function abrirDetalhe(item, { admin = false, statusInicial = null, aoSalvar = null, avisar = true } = {}) {
     const statusEscolhido = statusInicial ?? item.status;
+    const confirmandoFinalizacao = admin && statusInicial === STATUS.FINALIZADO;
     const aberto = idade(item.created_at);
 
     const edicao = admin ? `
@@ -36,7 +38,8 @@ export function abrirDetalhe(item, { admin = false, statusInicial = null, aoSalv
         <div class="aviso">${icone('mensagem')}<div><strong>Observação da administração</strong><br>${esc(item.observacao)}</div></div>` : '');
 
     const { el, fechar } = abrirModal({
-        titulo: 'Detalhes do registro',
+        titulo: confirmandoFinalizacao ? 'Finalizar procedimento' : 'Detalhes do registro',
+        descricao: confirmandoFinalizacao ? 'Confira os dados e confirme. Se não for finalizar agora, escolha outro status.' : '',
         largo: true,
         corpo: `
             <dl class="detalhes">
@@ -54,7 +57,7 @@ export function abrirDetalhe(item, { admin = false, statusInicial = null, aoSalv
             </section>`,
         rodape: admin ? `
             <button type="button" class="btn" data-fechar>Cancelar</button>
-            <button type="submit" class="btn btn--primario" form="form-status">${icone('check')}Salvar</button>` : `
+            <button type="submit" class="btn btn--primario" form="form-status" id="detalhe-salvar">${icone('check')}Salvar</button>` : `
             <button type="button" class="btn" data-fechar>Fechar</button>`,
     });
 
@@ -68,15 +71,20 @@ export function abrirDetalhe(item, { admin = false, statusInicial = null, aoSalv
     const obsRotulo = el.querySelector('#detalhe-obs-rotulo');
 
     const statusAtual = () => form.querySelector('input[name="status"]:checked')?.value;
+    const salvar = el.querySelector('#detalhe-salvar');
     const ajustarRotulo = () => {
         const recusado = statusAtual() === STATUS.RECUSADO;
         obsRotulo.textContent = recusado ? 'Motivo da recusa (obrigatório)' : 'Observação';
         obs.required = recusado;
         if (!recusado) obsErro.hidden = true;
+        const finalizando = statusAtual() === STATUS.FINALIZADO && item.status !== STATUS.FINALIZADO;
+        salvar.innerHTML = `${icone('check')}${finalizando ? 'Confirmar finalização' : 'Salvar'}`;
     };
     form.addEventListener('change', ajustarRotulo);
     ajustarRotulo();
+    // Confirmação rápida: Enter confirma; recusa vai direto para o motivo
     if (statusInicial === STATUS.RECUSADO) obs.focus();
+    else if (confirmandoFinalizacao) salvar.focus();
 
     form.addEventListener('submit', async (evento) => {
         evento.preventDefault();
@@ -106,7 +114,7 @@ export function abrirDetalhe(item, { admin = false, statusInicial = null, aoSalv
             return;
         }
         fechar();
-        toast(novoStatus === item.status ? 'Observação salva.' : `Status alterado para ${novoStatus}.`);
+        if (avisar) toast(novoStatus === item.status ? 'Observação salva.' : `Status alterado para ${novoStatus}.`);
         aoSalvar?.(data);
     });
 }

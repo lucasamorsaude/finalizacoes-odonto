@@ -3,7 +3,7 @@ import { iniciarApp } from '../app.js';
 import { sb, UNIDADES, normalizarUsuario } from '../supabase.js';
 import { icone } from '../icones.js';
 import {
-    esc, iniciais, abrirModal, toast, botaoCarregando, preencherSelect, mensagemErro, aplicarIcones, vazio, falha,
+    esc, iniciais, abrirModal, toast, botaoCarregando, mensagemErro, aplicarIcones, vazio, falha, segmentado,
 } from '../ui.js';
 
 aplicarIcones();
@@ -84,8 +84,8 @@ function abrirFormulario(usuario = null) {
                     ${editando ? '<span class="ajuda">Registros antigos continuam com o nome anterior.</span>' : ''}
                 </div>
                 <div class="campo">
-                    <label for="u-unidade">Unidade</label>
-                    <select id="u-unidade" class="entrada"></select>
+                    <span class="rotulo" id="rotulo-u-unidade">Unidade</span>
+                    <div id="u-unidade" class="segmentado--bloco" aria-labelledby="rotulo-u-unidade"></div>
                 </div>
                 <div class="campo">
                     <label for="u-senha">${editando ? 'Nova senha' : 'Senha'}</label>
@@ -101,7 +101,7 @@ function abrirFormulario(usuario = null) {
                  <button type="submit" class="btn btn--primario" form="form-usuario">${icone('check')}Salvar</button>`,
     });
 
-    preencherSelect(el.querySelector('#u-unidade'), UNIDADES, { vazio: 'Nenhuma', valor: usuario?.unidade ?? '' });
+    segmentado(el.querySelector('#u-unidade'), [['', 'Nenhuma'], ...UNIDADES], { valor: usuario?.unidade ?? '' });
     const erro = el.querySelector('#u-erro');
     const mostrarErro = (texto) => { erro.textContent = texto; erro.hidden = false; };
 

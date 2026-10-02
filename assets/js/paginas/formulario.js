@@ -1,9 +1,13 @@
 // Formulário público: sempre anônimo; lembra unidade e profissional no aparelho para registros em sequência.
 import { sbAnonimo, UNIDADES } from '../supabase.js';
 import { icone } from '../icones.js';
-import { aplicarIcones, preencherSelect, botaoCarregando, mensagemErro } from '../ui.js';
+import {
+    aplicarIcones, preencherSelect, botaoCarregando, mensagemErro, segmentado, botaoTema, ativarTema,
+} from '../ui.js';
 
 aplicarIcones();
+document.body.insertAdjacentHTML('beforeend', botaoTema('tema-flutuante'));
+ativarTema();
 
 const $ = id => document.getElementById(id);
 const form = $('form-registro');
@@ -29,7 +33,7 @@ function mostrar(tipo, texto) {
     mensagem.querySelector('span').textContent = texto;
 }
 
-preencherSelect(unidade, UNIDADES, { vazio: 'Selecione', valor: lembrar(CHAVE_UNIDADE) });
+segmentado(unidade, UNIDADES, { valor: lembrar(CHAVE_UNIDADE) });
 
 const { data: profissionais, error } = await sbAnonimo.rpc('listar_profissionais');
 if (error) {

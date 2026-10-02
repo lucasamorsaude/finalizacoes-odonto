@@ -5,7 +5,7 @@ import { icone } from '../icones.js';
 import { barrasEmpilhadas, colunasEmpilhadas } from '../graficos.js';
 import {
     esc, numero, percentual, duracaoHoras, idade, diaMes, ultimosDias, lerParametros, gravarParametros,
-    preencherSelect, aplicarIcones, abrirModal, toast, mensagemErro, vazio,
+    aplicarIcones, abrirModal, toast, mensagemErro, vazio, segmentado,
 } from '../ui.js';
 
 aplicarIcones();
@@ -34,7 +34,7 @@ let dias = PERIODOS.includes(Number(params.periodo)) ? Number(params.periodo) : 
 let linhas = [];
 let ordem = { chave: 'recebidos', desc: true };
 
-preencherSelect($('f-unidade'), UNIDADES, { vazio: 'Todas', valor: params.unidade ?? '' });
+segmentado($('f-unidade'), [['', 'Todas'], ...UNIDADES], { valor: params.unidade ?? '' });
 
 async function carregar() {
     $('periodo').querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(Number(b.dataset.dias) === dias)));

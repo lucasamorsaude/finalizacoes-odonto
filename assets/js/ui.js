@@ -313,3 +313,72 @@ export function ativarFiltrosMoveis(botao, filtros) {
         botao.setAttribute('aria-expanded', String(expandir));
     });
 }
+
+// ── Tema claro/escuro ──────────────────────────────────────────────────────
+// A escolha fica no aparelho; sem escolha, segue o sistema operacional.
+// Cada página aplica o tema salvo num <script> no <head>, antes de desenhar, para não piscar.
+
+const CHAVE_TEMA = 'finaliza:tema';
+const sistemaEscuro = matchMedia('(prefers-color-scheme: dark)');
+
+export function temaAtual() {
+    return document.documentElement.dataset.theme || (sistemaEscuro.matches ? 'dark' : 'light');
+}
+
+export function botaoTema(classe = '') {
+    return `<button type="button" class="btn btn--fantasma btn--icone btn--sm ${classe}" data-alternar-tema></button>`;
+}
+
+function atualizarBotoesTema() {
+    const escuro = temaAtual() === 'dark';
+    document.querySelectorAll('[data-alternar-tema]').forEach(botao => {
+        botao.innerHTML = icone(escuro ? 'sol' : 'lua');
+        const rotulo = escuro ? 'Usar tema claro' : 'Usar tema escuro';
+        botao.setAttribute('aria-label', rotulo);
+        botao.title = rotulo;
+    });
+}
+
+export function ativarTema() {
+    atualizarBotoesTema();
+    sistemaEscuro.addEventListener('change', atualizarBotoesTema);
+}
+
+document.addEventListener('click', (evento) => {
+    if (!evento.target.closest('[data-alternar-tema]')) return;
+    const novo = temaAtual() === 'dark' ? 'light' : 'dark';
+    document.documentElement.dataset.theme = novo;
+    try { localStorage.setItem(CHAVE_TEMA, novo); } catch { /* navegação privada */ }
+    atualizarBotoesTema();
+});
+
+// ── Seletor em botões (segmentado) ─────────────────────────────────────────
+// Para poucas opções (ex.: unidades). O elemento ganha `.value` e dispara `change`,
+// então as telas o usam como se fosse um <select>.
+
+export function segmentado(el, opcoes, { valor = '' } = {}) {
+    el.classList.add('segmentado');
+    el.setAttribute('role', 'group');
+    el.innerHTML = opcoes.map(o => {
+        const [v, r] = Array.isArray(o) ? o : [o, o];
+        return `<button type="button" data-valor="${esc(v)}">${esc(r)}</button>`;
+    }).join('');
+
+    let atual = valor;
+    const marcar = () => el.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.valor === atual)));
+    Object.defineProperty(el, 'value', {
+        get: () => atual,
+        set: (novo) => { atual = novo ?? ''; marcar(); },
+        configurable: true,
+    });
+    el.addEventListener('click', (evento) => {
+        const botao = evento.target.closest('button[data-valor]');
+        if (!botao || botao.dataset.valor === atual) return;
+        atual = botao.dataset.valor;
+        marcar();
+        el.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+    el.focus = () => (el.querySelector('[aria-pressed="true"]') ?? el.querySelector('button'))?.focus();
+    marcar();
+    return el;
+}

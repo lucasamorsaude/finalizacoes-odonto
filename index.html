@@ -2,9 +2,10 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
+    <script>try { const t = localStorage.getItem('finaliza:tema'); if (t) document.documentElement.dataset.theme = t; } catch {}</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrar procedimento · Finaliza Odonto</title>
-    <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="assets/img/logo.png" type="image/png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -14,24 +15,22 @@
     <main class="publica">
         <div class="publica__caixa">
             <div class="publica__marca">
-                <img src="assets/img/logo.svg" alt="">
+                <img src="assets/img/logo.png" alt="">
                 <div><strong>Finaliza Odonto</strong><span>AmorSaúde São João del-Rei</span></div>
             </div>
             <div class="cartao">
                 <h1>Registrar procedimento</h1>
                 <p class="sub">Informe o procedimento concluído para a administração dar baixa.</p>
                 <form id="form-registro" novalidate>
-                    <div class="grupo-2">
-                        <div class="campo">
-                            <label for="unidade">Unidade</label>
-                            <select id="unidade" class="entrada" required></select>
-                        </div>
-                        <div class="campo">
-                            <label for="profissional">Profissional</label>
-                            <select id="profissional" class="entrada" required disabled>
-                                <option value="">Carregando...</option>
-                            </select>
-                        </div>
+                    <div class="campo">
+                        <span class="rotulo" id="rotulo-unidade">Unidade</span>
+                        <div id="unidade" class="segmentado--bloco" aria-labelledby="rotulo-unidade"></div>
+                    </div>
+                    <div class="campo">
+                        <label for="profissional">Profissional</label>
+                        <select id="profissional" class="entrada" required disabled>
+                            <option value="">Carregando...</option>
+                        </select>
                     </div>
                     <div class="campo">
                         <label for="paciente">Nome do paciente</label>

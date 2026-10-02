@@ -5,7 +5,7 @@ import { icone } from '../icones.js';
 import {
     esc, dataHora, chipStatus, classeStatus, nomeCopiavel, numero, toast, esqueletoLinhas, vazio, falha, debounce,
     lerParametros, gravarParametros, preencherSelect, intervaloDeDatas, mensagemErro, aplicarIcones,
-    ativarFiltrosMoveis, botaoCarregando,
+    ativarFiltrosMoveis, botaoCarregando, segmentado,
 } from '../ui.js';
 import { abrirDetalhe } from '../detalhe.js';
 
@@ -29,7 +29,7 @@ let itens = [];
 let status = STATUS_TODOS.includes(params.status) ? params.status : '';
 let primeiraCarga = true;
 
-preencherSelect(el.unidade, UNIDADES, { vazio: 'Todas', valor: params.unidade ?? '' });
+segmentado(el.unidade, [['', 'Todas'], ...UNIDADES], { valor: params.unidade ?? '' });
 el.busca.value = params.busca ?? '';
 el.de.value = params.de ?? '';
 el.ate.value = params.ate ?? '';

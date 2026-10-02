@@ -4,7 +4,7 @@ import { sb, UNIDADES } from '../supabase.js';
 import { colunasEmpilhadas, barraFaixas } from '../graficos.js';
 import {
     esc, numero, percentual, duracaoHoras, data, diaMes, idade, ultimosDias, lerParametros, gravarParametros,
-    preencherSelect, aplicarIcones, toast, mensagemErro,
+    preencherSelect, aplicarIcones, toast, mensagemErro, segmentado,
 } from '../ui.js';
 
 aplicarIcones();
@@ -22,7 +22,7 @@ const SERIES = [
 const params = lerParametros();
 let dias = PERIODOS.includes(Number(params.periodo)) ? Number(params.periodo) : 30;
 
-preencherSelect($('f-unidade'), UNIDADES, { vazio: 'Todas', valor: params.unidade ?? '' });
+segmentado($('f-unidade'), [['', 'Todas'], ...UNIDADES], { valor: params.unidade ?? '' });
 if (admin) {
     $('campo-profissional').hidden = false;
     const { data: nomes } = await sb.rpc('profissionais_registrados');

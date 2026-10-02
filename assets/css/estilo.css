@@ -17,10 +17,10 @@
     --texto-2: #52514e;
     --texto-3: #6b6a66;
 
-    --marca: #0f766e;
-    --marca-hover: #115e59;
-    --marca-suave: #e3f2ef;
-    --marca-texto: #0f766e;
+    --marca: #2563eb;
+    --marca-hover: #1d4ed8;
+    --marca-suave: #e8effd;
+    --marca-texto: #1d4ed8;
     --sobre-marca: #ffffff;
 
     --perigo: #b42318;
@@ -46,7 +46,7 @@
     --sombra-1: 0 1px 2px rgba(11, 11, 11, 0.05);
     --sombra-2: 0 4px 16px rgba(11, 11, 11, 0.08);
     --sombra-3: 0 16px 48px rgba(11, 11, 11, 0.18);
-    --foco: 0 0 0 3px rgba(15, 118, 110, 0.35);
+    --foco: 0 0 0 3px rgba(37, 99, 235, 0.35);
 
     --raio-1: 6px;
     --raio-2: 10px;
@@ -71,11 +71,11 @@
         --texto-2: #c3c2b7;
         --texto-3: #a3a29a;
 
-        --marca: #2dd4bf;
-        --marca-hover: #5eead4;
-        --marca-suave: rgba(45, 212, 191, 0.12);
-        --marca-texto: #5eead4;
-        --sobre-marca: #042f2e;
+        --marca: #60a5fa;
+        --marca-hover: #93c5fd;
+        --marca-suave: rgba(96, 165, 250, 0.14);
+        --marca-texto: #93c5fd;
+        --sobre-marca: #0b1a33;
 
         --perigo: #f87171;
         --perigo-suave: rgba(248, 113, 113, 0.12);
@@ -98,8 +98,52 @@
         --sombra-1: 0 1px 2px rgba(0, 0, 0, 0.4);
         --sombra-2: 0 4px 16px rgba(0, 0, 0, 0.45);
         --sombra-3: 0 16px 48px rgba(0, 0, 0, 0.6);
-        --foco: 0 0 0 3px rgba(45, 212, 191, 0.4);
+        --foco: 0 0 0 3px rgba(96, 165, 250, 0.45);
     }
+}
+
+:root[data-theme="dark"] {
+    color-scheme: dark;
+
+    --fundo: #0d0d0d;
+    --superficie: #1a1a19;
+    --superficie-2: #232322;
+    --superficie-hover: #262625;
+    --borda: rgba(255, 255, 255, 0.10);
+    --borda-forte: rgba(255, 255, 255, 0.18);
+
+    --texto: #ffffff;
+    --texto-2: #c3c2b7;
+    --texto-3: #a3a29a;
+
+    --marca: #60a5fa;
+    --marca-hover: #93c5fd;
+    --marca-suave: rgba(96, 165, 250, 0.14);
+    --marca-texto: #93c5fd;
+    --sobre-marca: #0b1a33;
+
+    --perigo: #f87171;
+    --perigo-suave: rgba(248, 113, 113, 0.12);
+    --sucesso: #4ade80;
+
+    --st-pendente-bg: rgba(232, 161, 12, 0.16);  --st-pendente-fg: #f6c768;
+    --st-liberacao-bg: rgba(57, 135, 229, 0.18); --st-liberacao-fg: #93bff2;
+    --st-pagamento-bg: rgba(144, 133, 233, 0.20); --st-pagamento-fg: #c3baf7;
+    --st-finalizado-bg: rgba(31, 157, 72, 0.18); --st-finalizado-fg: #7fdc9b;
+    --st-recusado-bg: rgba(208, 59, 59, 0.20);   --st-recusado-fg: #f5a3a3;
+
+    --serie-1: #3987e5;
+    --serie-2: #d95926;
+    --serie-3: #199e70;
+    --ordinal-1: #1c5cab; --ordinal-2: #2a78d6; --ordinal-3: #5598e7; --ordinal-4: #86b6ef;
+    --grade: #2c2c2a;
+    --eixo: #383835;
+    --texto-eixo: #a3a29a;
+
+    --sombra-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --sombra-2: 0 4px 16px rgba(0, 0, 0, 0.45);
+    --sombra-3: 0 16px 48px rgba(0, 0, 0, 0.6);
+    --foco: 0 0 0 3px rgba(96, 165, 250, 0.45);
 }
 
 /* ── Base ───────────────────────────────────────────────────────────────── */
@@ -513,7 +557,8 @@ select.entrada {
     background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
     transform: translateX(-100%); animation: brilho 1.3s infinite;
 }
-@media (prefers-color-scheme: dark) { .esqueleto::after { background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent); } }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .esqueleto::after { background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent); } }
+:root[data-theme="dark"] .esqueleto::after { background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent); }
 @keyframes brilho { to { transform: translateX(100%); } }
 .esqueleto-linha { height: 14px; margin: 8px 0; }
 
@@ -678,3 +723,15 @@ kbd {
 .tabela--desempenho td, .tabela--desempenho th { padding-left: 12px; padding-right: 12px; }
 .tabela--desempenho td.direita { white-space: nowrap; }
 .tabela--desempenho .medidor__trilha { max-width: 70px; }
+
+/* Segmentado ocupando a largura (formulários) e na altura dos campos */
+.segmentado--bloco { display: flex; width: 100%; }
+.segmentado--bloco button { flex: 1; min-height: 32px; }
+.filtros .segmentado button { min-height: 30px; }
+@media (max-width: 900px) { .segmentado--bloco button { min-height: 36px; } }
+
+/* Botão de tema nas páginas públicas */
+.tema-flutuante { position: fixed; top: 12px; right: 12px; z-index: 10; }
+
+/* Logo original (PNG) */
+.marca img, .publica__marca img { object-fit: contain; }

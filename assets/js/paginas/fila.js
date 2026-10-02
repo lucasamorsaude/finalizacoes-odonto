@@ -5,7 +5,7 @@ import { icone } from '../icones.js';
 import {
     esc, idade, dataHora, chipStatus, classeStatus, nomeCopiavel, copiarTexto, toast, esqueletoLinhas, vazio, falha,
     debounce, lerParametros, gravarParametros, preencherSelect, numero, mensagemErro, aplicarIcones, abrirModal,
-    botaoCarregando, ativarFiltrosMoveis,
+    botaoCarregando, ativarFiltrosMoveis, segmentado,
 } from '../ui.js';
 import { abrirDetalhe } from '../detalhe.js';
 
@@ -37,7 +37,7 @@ const estado = {
 // ── Configuração inicial ───────────────────────────────────────────────────
 
 const params = lerParametros();
-preencherSelect(el.unidade, UNIDADES, { vazio: 'Todas', valor: params.unidade ?? '' });
+segmentado(el.unidade, [['', 'Todas'], ...UNIDADES], { valor: params.unidade ?? '' });
 el.busca.value = params.busca ?? '';
 el.idade.value = params.idade ?? '';
 el.ordem.value = params.ordem ?? 'antigos';
@@ -46,7 +46,7 @@ estado.status = STATUS_ABERTOS.includes(params.status) ? params.status : '';
 if (admin) {
     $('campo-profissional').hidden = false;
     $('atalhos').hidden = false;
-    el.lista.style.setProperty('--colunas', '28px minmax(0, 1fr) 180px 96px 104px 196px 152px');
+    el.lista.style.setProperty('--colunas', '28px minmax(0, 1fr) 180px 96px 104px 196px 116px');
     el.lista.style.setProperty('--areas-movel', '"sel pac pac" ". prof prof" ". uni idade" ". status acoes"');
     const { data } = await sb.rpc('profissionais_registrados');
     preencherSelect(el.profissional, data ?? [], { vazio: 'Todos', valor: params.profissional ?? '' });
@@ -183,8 +183,7 @@ function linhaHtml(item) {
             <div class="celula-prof a-prof">${esc(item.profissional)}</div>
             ${comum}
             <div class="celula-acoes a-acoes">
-                <button type="button" class="btn btn--sm btn--primario" data-acao="finalizar">${icone('check', 'icone--sm')}Finalizar</button>
-                <button type="button" class="btn btn--sm btn--icone" data-acao="detalhe" aria-label="Mais opções para ${esc(item.paciente)}" title="Status, observação e histórico">${icone('reticencias')}</button>
+                <button type="button" class="btn btn--sm btn--primario" data-acao="finalizar" title="Confirmar a finalização, mudar o status ou ver o histórico">${icone('check', 'icone--sm')}Finalizar</button>
             </div>
         </div>`;
 }
@@ -224,39 +223,24 @@ const linhaPorId = id => el.lista.querySelector(`.linha[data-id="${id}"]`);
 
 // ── Ações ──────────────────────────────────────────────────────────────────
 
-async function finalizar(ids) {
-    const itens = ids.map(itemPorId).filter(Boolean);
-    if (!itens.length) return;
-
-    // Retorno visual imediato; a lista só muda de fato após o banco confirmar
-    itens.forEach(i => linhaPorId(i.id)?.classList.add('saindo'));
-
-    const { data, error } = await sb.from('finalizacoes')
-        .update({ status: STATUS.FINALIZADO })
-        .in('id', itens.map(i => i.id))
-        .select('id');
-
-    if (error || !data?.length) {
-        itens.forEach(i => linhaPorId(i.id)?.classList.remove('saindo'));
-        toast(error ? mensagemErro(error) : 'Nenhum item foi alterado.', { tipo: 'erro' });
+// Toda finalização passa por uma janela de confirmação, para não dar baixa sem querer.
+// Depois de confirmar, o que saiu da fila some da lista e pode ser desfeito por alguns segundos.
+function aplicarResultado(anteriores, novoStatus) {
+    if (STATUS_ABERTOS.includes(novoStatus)) {
+        carregar({ silencioso: true });
+        atualizarContadorFila();
         return;
     }
-
-    removerDaLista(itens);
-    toast(itens.length === 1 ? `Finalizado: ${itens[0].paciente}` : `${itens.length} itens finalizados`, {
-        acao: { rotulo: 'Desfazer', aoClicar: () => desfazer(itens) },
-        duracao: 7000,
-    });
+    removerDaLista(anteriores);
+    const verbo = novoStatus === STATUS.FINALIZADO ? 'finalizado' : 'recusado';
+    const texto = anteriores.length === 1
+        ? `${verbo[0].toUpperCase()}${verbo.slice(1)}: ${anteriores[0].paciente}`
+        : `${anteriores.length} itens ${verbo}s`;
+    toast(texto, { acao: { rotulo: 'Desfazer', aoClicar: () => desfazer(anteriores) }, duracao: 8000 });
 }
 
 function removerDaLista(itens) {
     const ids = new Set(itens.map(i => i.id));
-    const focoNaLista = document.activeElement?.closest?.('.linha');
-    const proximaFocada = focoNaLista && ids.has(Number(focoNaLista.dataset.id))
-        ? [...el.lista.querySelectorAll('.linha[data-id]')].find(l => !ids.has(Number(l.dataset.id))
-            && l.compareDocumentPosition(focoNaLista) & Node.DOCUMENT_POSITION_PRECEDING)
-        : null;
-
     estado.itens = estado.itens.filter(i => !ids.has(i.id));
     estado.total = Math.max(0, estado.total - itens.length);
     itens.forEach(i => {
@@ -264,41 +248,47 @@ function removerDaLista(itens) {
         estado.selecionados.delete(i.id);
     });
     renderizar();
-    if (proximaFocada) linhaPorId(proximaFocada.dataset.id)?.focus();
     atualizarContadorFila();
 }
 
-async function desfazer(itens) {
-    const porStatus = new Map();
-    itens.forEach(i => porStatus.set(i.status, [...(porStatus.get(i.status) ?? []), i]));
-    const resultados = await Promise.all([...porStatus].map(([status, grupo]) =>
-        sb.from('finalizacoes').update({ status }).in('id', grupo.map(i => i.id))));
+// Volta cada item ao status e à observação que tinha antes
+async function desfazer(anteriores) {
+    const resultados = await Promise.all(anteriores.map(i =>
+        sb.from('finalizacoes').update({ status: i.status, observacao: i.observacao ?? null }).eq('id', i.id)));
     const erro = resultados.find(r => r.error)?.error;
     if (erro) toast(mensagemErro(erro), { tipo: 'erro' });
-    else toast(itens.length === 1 ? 'Finalização desfeita.' : `${itens.length} finalizações desfeitas.`);
+    else toast(anteriores.length === 1 ? 'Alteração desfeita.' : `${anteriores.length} alterações desfeitas.`);
     await carregar({ silencioso: true });
     atualizarContadorFila();
 }
 
 function abrir(item, statusInicial = null) {
+    const anterior = { ...item };
     abrirDetalhe(item, {
         admin,
         statusInicial,
-        aoSalvar: () => {
-            carregar({ silencioso: true });
-            atualizarContadorFila();
+        avisar: false,
+        aoSalvar: (atualizado) => {
+            if (atualizado.status === anterior.status) toast('Observação salva.');
+            aplicarResultado([anterior], atualizado.status);
         },
     });
 }
 
-function alterarStatusEmLote() {
-    const ids = [...estado.selecionados];
+function finalizarEmLote() {
+    const anteriores = [...estado.selecionados].map(itemPorId).filter(Boolean).map(i => ({ ...i }));
+    if (!anteriores.length) return;
+    const nomes = anteriores.slice(0, 6).map(i => `<li>${esc(i.paciente)} <span class="texto-3">· ${esc(i.profissional)}</span></li>`).join('')
+        + (anteriores.length > 6 ? `<li class="texto-3">e mais ${anteriores.length - 6}</li>` : '');
+
     const { el: modal, fechar } = abrirModal({
-        titulo: `Alterar status de ${ids.length} ${ids.length === 1 ? 'item' : 'itens'}`,
+        titulo: `Finalizar ${anteriores.length} ${anteriores.length === 1 ? 'item' : 'itens'}`,
+        descricao: 'Confira a lista e confirme. Se não for finalizar agora, escolha outro status.',
         corpo: `
+            <ul style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px;font-size:0.875rem">${nomes}</ul>
             <form id="form-lote" novalidate style="display:flex;flex-direction:column;gap:14px">
                 <div class="opcoes-status">
-                    ${STATUS_TODOS.map((s, n) => `<label><input type="radio" name="status" value="${esc(s)}" ${n === 0 ? 'checked' : ''}>${esc(s)}</label>`).join('')}
+                    ${STATUS_TODOS.map(s => `<label><input type="radio" name="status" value="${esc(s)}" ${s === STATUS.FINALIZADO ? 'checked' : ''}>${esc(s)}</label>`).join('')}
                 </div>
                 <div class="campo">
                     <label for="lote-obs" id="lote-obs-rotulo">Observação (opcional)</label>
@@ -307,15 +297,21 @@ function alterarStatusEmLote() {
                 </div>
             </form>`,
         rodape: `<button type="button" class="btn" data-fechar>Cancelar</button>
-                 <button type="submit" form="form-lote" class="btn btn--primario">Aplicar</button>`,
+                 <button type="submit" form="form-lote" class="btn btn--primario" id="lote-confirmar"></button>`,
     });
 
     const form = modal.querySelector('#form-lote');
     const obs = modal.querySelector('#lote-obs');
-    form.addEventListener('change', () => {
-        const recusa = form.status.value === STATUS.RECUSADO;
-        modal.querySelector('#lote-obs-rotulo').textContent = recusa ? 'Motivo da recusa (obrigatório)' : 'Observação (opcional)';
-    });
+    const confirmar = modal.querySelector('#lote-confirmar');
+    const ajustar = () => {
+        const status = form.status.value;
+        modal.querySelector('#lote-obs-rotulo').textContent = status === STATUS.RECUSADO ? 'Motivo da recusa (obrigatório)' : 'Observação (opcional)';
+        confirmar.innerHTML = `${icone('checkDuplo')}${status === STATUS.FINALIZADO ? 'Confirmar finalização' : 'Aplicar'}`;
+    };
+    form.addEventListener('change', ajustar);
+    ajustar();
+    confirmar.focus();
+
     form.addEventListener('submit', async (evento) => {
         evento.preventDefault();
         const status = form.status.value;
@@ -325,22 +321,18 @@ function alterarStatusEmLote() {
             obs.focus();
             return;
         }
-        const botao = modal.querySelector('button[type="submit"]');
-        botaoCarregando(botao, true);
-        const { data, error } = await sb.from('finalizacoes')
+        botaoCarregando(confirmar, true);
+        const { error } = await sb.from('finalizacoes')
             .update(texto ? { status, observacao: texto } : { status })
-            .in('id', ids)
-            .select('id');
-        botaoCarregando(botao, false);
+            .in('id', anteriores.map(i => i.id));
+        botaoCarregando(confirmar, false);
         if (error) {
             toast(mensagemErro(error), { tipo: 'erro' });
             return;
         }
         fechar();
         estado.selecionados.clear();
-        toast(`${data.length} ${data.length === 1 ? 'item alterado' : 'itens alterados'} para ${status}.`);
-        carregar({ silencioso: true });
-        atualizarContadorFila();
+        aplicarResultado(anteriores, status);
     });
 }
 
@@ -357,8 +349,7 @@ el.lista.addEventListener('click', (evento) => {
     const item = itemPorId(linha.dataset.id);
     const acao = evento.target.closest('[data-acao]')?.dataset.acao;
 
-    if (acao === 'finalizar') finalizar([item.id]);
-    else if (acao === 'detalhe') abrir(item);
+    if (acao === 'finalizar') abrir(item, STATUS.FINALIZADO);
     else if (!evento.target.closest('button, input, a')) {
         if (admin) alternarSelecao(item.id);
         else abrir(item);
@@ -399,8 +390,7 @@ el.busca.addEventListener('input', debounce(recarregarFiltros, 300));
 [el.unidade, el.profissional, el.idade, el.ordem].forEach(s => s.addEventListener('change', recarregarFiltros));
 el.mais.addEventListener('click', () => carregar({ acrescentar: true }));
 $('atualizar').addEventListener('click', () => carregar());
-$('lote-finalizar').addEventListener('click', () => finalizar([...estado.selecionados]));
-$('lote-status').addEventListener('click', alterarStatusEmLote);
+$('lote-finalizar').addEventListener('click', finalizarEmLote);
 $('lote-limpar').addEventListener('click', () => {
     estado.selecionados.clear();
     renderizar();
@@ -445,7 +435,7 @@ document.addEventListener('keydown', (evento) => {
     else if (tecla === 'arrowup' || tecla === 'k') linhas[pos - 1]?.focus();
     else if (tecla === 'c') copiarTexto(item.paciente, linha.querySelector('.copiavel'));
     else if (tecla === 'enter' && alvo === linha) abrir(item);
-    else if (admin && tecla === 'f') finalizar([item.id]);
+    else if (admin && tecla === 'f') abrir(item, STATUS.FINALIZADO);
     else if (admin && tecla === ' ' && alvo === linha) alternarSelecao(item.id);
     else return;
     evento.preventDefault();

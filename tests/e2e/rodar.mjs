@@ -104,7 +104,7 @@ async function principal() {
         const p = await novaPagina();
         await p.goto(BASE);
         await p.waitForSelector('#profissional:not([disabled])');
-        await p.selectOption('#unidade', 'SJDR');
+        await p.click('#unidade button[data-valor="SJDR"]');
         await p.selectOption('#profissional', PROF);
         for (const nome of PACIENTES.slice(0, 3)) {
             await p.fill('#paciente', nome);
@@ -112,11 +112,12 @@ async function principal() {
             await p.click('#registrar');
             await p.waitForFunction(n => document.querySelector('#mensagem')?.textContent.includes(n), nome);
         }
-        afirmar(await p.inputValue('#unidade') === 'SJDR' && await p.inputValue('#profissional') === PROF, 'não lembrou unidade/profissional');
+        const unidadeMarcada = () => p.evaluate(() => document.querySelector('#unidade [aria-pressed="true"]')?.dataset.valor);
+        afirmar(await unidadeMarcada() === 'SJDR' && await p.inputValue('#profissional') === PROF, 'não lembrou unidade/profissional');
         afirmar(await p.inputValue('#paciente') === '', 'paciente não foi limpo');
         await p.goto(BASE);
         await p.waitForSelector('#profissional:not([disabled])');
-        afirmar(await p.inputValue('#profissional') === PROF, 'não lembrou após recarregar');
+        afirmar(await p.inputValue('#profissional') === PROF && await unidadeMarcada() === 'SJDR', 'não lembrou após recarregar');
         await p.screenshot({ path: `${CAPTURAS}formulario.png` });
         afirmar((await registrosTemporarios()).length === 3, 'esperava 3 registros');
         await p.context().close();
@@ -148,8 +149,12 @@ async function principal() {
         afirmar(copiado === PACIENTES[0], `copiou "${copiado}"`);
     });
 
-    await cenario('4. Finalizar com um clique e desfazer', async () => {
+    await cenario('4. Finalizar pede confirmação; Enter confirma; desfazer', async () => {
         await linhaDe(PACIENTES[0]).locator('[data-acao="finalizar"]').click();
+        await admin.waitForSelector('.modal:has-text("Finalizar procedimento")');
+        afirmar((await registrosTemporarios())[0].status === 'Pendente', 'clicar em Finalizar já alterou o status');
+        afirmar(await admin.evaluate(() => document.activeElement?.id) === 'detalhe-salvar', 'confirmação não está focada');
+        await admin.keyboard.press('Enter');
         await linhaDe(PACIENTES[0]).waitFor({ state: 'detached' });
         await admin.click('.toast button:has-text("Desfazer")');
         await linhaDe(PACIENTES[0]).waitFor();
@@ -161,7 +166,7 @@ async function principal() {
     });
 
     await cenario('5. Recusar exige motivo e tira da fila', async () => {
-        await linhaDe(PACIENTES[1]).locator('[data-acao="detalhe"]').click();
+        await linhaDe(PACIENTES[1]).locator('[data-acao="finalizar"]').click();
         await admin.check('input[name="status"][value="Recusado"]');
         await admin.click('.modal button[type="submit"]');
         afirmar(await admin.isVisible('#detalhe-obs-erro'), 'não exigiu motivo');
@@ -172,11 +177,14 @@ async function principal() {
         afirmar(bruno.status === 'Recusado' && bruno.observacao, 'não ficou recusado com motivo');
     });
 
-    await cenario('6. Finalizar em lote', async () => {
+    await cenario('6. Finalizar em lote com confirmação', async () => {
         await linhaDe(PACIENTES[0]).locator('[data-sel]').check();
         await linhaDe(PACIENTES[2]).locator('[data-sel]').check();
         afirmar((await admin.textContent('#lote-qtd')).includes('2'), 'barra de lote não mostra 2');
         await admin.click('#lote-finalizar');
+        await admin.waitForSelector('.modal:has-text("Finalizar 2 itens")');
+        afirmar((await registrosTemporarios()).filter(r => r.status === 'Finalizado').length === 0, 'lote finalizou sem confirmar');
+        await admin.click('#lote-confirmar');
         await admin.waitForFunction(() => !document.querySelector('.linha[data-id]'));
         const finalizados = (await registrosTemporarios()).filter(r => r.status === 'Finalizado' && r.finalizado_em);
         afirmar(finalizados.length === 2, `finalizados com data: ${finalizados.length}`);
@@ -189,7 +197,7 @@ async function principal() {
         await entrar(dentista, LOGIN_PROF, SENHA_PROF);
         await dentista.click('.lateral [data-nova-finalizacao]');
         afirmar(!(await dentista.isVisible('#nova-profissional')), 'dentista não deveria escolher profissional');
-        await dentista.selectOption('#nova-unidade', 'SJDR');
+        await dentista.click('#nova-unidade button[data-valor="SJDR"]');
         await dentista.fill('#nova-paciente', PACIENTES[3]);
         await dentista.fill('#nova-procedimento', 'Registro pelo sistema (teste)');
         await dentista.click('.modal button[type="submit"]');
@@ -252,7 +260,7 @@ async function principal() {
         return `recebidos 30d = ${count}, abertos = ${abertos}`;
     });
 
-    await cenario('11. Todas as telas em 360 px e no modo escuro, sem erros', async () => {
+    await cenario('11. Telas em 360 px, modo escuro e botão de tema, sem erros', async () => {
         const telas = ['fila.html', 'painel.html', 'desempenho.html', 'registros.html', 'usuarios.html'];
         const movel = await novaPagina({ largura: 360, altura: 780 });
         await movel.goto(BASE);
@@ -280,8 +288,17 @@ async function principal() {
             await escuro.waitForLoadState('networkidle');
             await escuro.screenshot({ path: `${CAPTURAS}escuro-${tela.replace('.html', '')}.png` });
         }
+        // Botão de tema: alterna e continua escolhido após recarregar
+        const tema = await novaPagina({ esquema: 'light' });
+        await tema.goto(`${BASE}login.html`);
+        await tema.click('[data-alternar-tema]');
+        afirmar(await tema.evaluate(() => document.documentElement.dataset.theme) === 'dark', 'tema não mudou para escuro');
+        await tema.reload();
+        afirmar(await tema.evaluate(() => document.documentElement.dataset.theme) === 'dark', 'tema não persistiu');
+        await tema.screenshot({ path: `${CAPTURAS}login-escuro-manual.png` });
+
         afirmar(!errosConsole.length, `erros de console: ${errosConsole.join(' | ')}`);
-        return '7 telas';
+        return '7 telas + botão de tema';
     });
 }
 
