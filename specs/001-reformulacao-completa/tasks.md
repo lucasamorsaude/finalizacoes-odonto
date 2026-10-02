@@ -89,7 +89,7 @@ description: "Task list — Reformulação completa do Finaliza Odonto"
 - [X] T026 [P] Testes e2e em `tests/e2e/rodar.mjs` cobrindo os 12 cenários do quickstart, com limpeza
 - [X] T027 Rodar e2e, revisar capturas (desktop, 360 px, escuro), corrigir problemas
 - [X] T028 [P] Atualizar `supabase/README.md` (migrações, testes, papéis, status Recusado)
-- [ ] T029 Merge na `main`, verificar site publicado (cenários somente leitura)
+- [X] T029 Merge na `main`, verificar site publicado (cenários somente leitura)
 
 ## Dependencies & Execution Order
 
