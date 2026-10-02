@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel · Finaliza Odonto</title>
+    <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/estilo.css">
+</head>
+<body>
+    <main class="conteudo" hidden>
+        <div class="cabecalho">
+            <div>
+                <h1 id="titulo">Painel</h1>
+                <p id="subtitulo">Visão geral das finalizações.</p>
+            </div>
+        </div>
+
+        <div class="filtros" id="filtros">
+            <div class="campo" style="flex:0 0 auto">
+                <span class="rotulo" id="rotulo-periodo">Período</span>
+                <div class="segmentado" role="group" aria-labelledby="rotulo-periodo" id="periodo">
+                    <button type="button" data-dias="7">7 dias</button>
+                    <button type="button" data-dias="30">30 dias</button>
+                    <button type="button" data-dias="90">90 dias</button>
+                    <button type="button" data-dias="365">12 meses</button>
+                </div>
+            </div>
+            <div class="campo" style="flex:0 1 200px">
+                <label for="f-unidade">Unidade</label>
+                <select id="f-unidade" class="entrada"></select>
+            </div>
+            <div class="campo" id="campo-profissional" style="flex:0 1 280px" hidden>
+                <label for="f-profissional">Profissional</label>
+                <select id="f-profissional" class="entrada"></select>
+            </div>
+        </div>
+
+        <div id="painel">
+            <section class="cartao" style="margin-bottom:16px">
+                <div class="cartao__corpo heroi">
+                    <div>
+                        <span class="rotulo">Em aberto agora</span>
+                        <div class="valor" id="aberto-total">—</div>
+                        <p class="texto-3 pequeno" id="aberto-antigo" style="margin-top:8px"></p>
+                        <a class="btn btn--sm" href="fila.html" style="margin-top:12px">Abrir fila<i data-icone="direita" class="icone--sm"></i></a>
+                    </div>
+                    <div>
+                        <span class="rotulo" style="display:block;margin-bottom:10px">Há quanto tempo estão na fila</span>
+                        <div class="grafico" id="grafico-faixas"></div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="grade-kpi" id="kpis"></div>
+
+            <div class="grade-painel">
+                <section class="cartao">
+                    <div class="cartao__cab">
+                        <div>
+                            <h2 id="titulo-serie">Recebidos por dia</h2>
+                            <p>Situação atual dos procedimentos registrados em cada intervalo.</p>
+                        </div>
+                    </div>
+                    <div class="cartao__corpo"><div class="grafico" id="grafico-serie"></div></div>
+                </section>
+                <section class="cartao">
+                    <div class="cartao__cab"><div><h2>Por unidade</h2><p>Registros recebidos no período.</p></div></div>
+                    <div class="cartao__corpo" id="por-unidade"></div>
+                </section>
+            </div>
+            <p class="aviso" id="aviso-tempo" style="margin-top:16px" hidden></p>
+        </div>
+    </main>
+
+    <script type="module" src="assets/js/paginas/painel.js"></script>
+</body>
+</html>

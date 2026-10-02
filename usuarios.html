@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usuários · Finaliza Odonto</title>
+    <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/estilo.css">
+</head>
+<body>
+    <main class="conteudo" hidden>
+        <div class="cabecalho">
+            <div>
+                <h1>Usuários</h1>
+                <p>Quem acessa o sistema. Profissionais ativos aparecem no formulário de registro.</p>
+            </div>
+            <div class="acoes">
+                <button type="button" class="btn btn--primario" id="novo"><i data-icone="mais"></i>Novo usuário</button>
+            </div>
+        </div>
+
+        <div class="filtros">
+            <div class="campo campo--busca">
+                <label for="f-busca">Buscar</label>
+                <div class="com-icone">
+                    <i data-icone="busca"></i>
+                    <input type="search" id="f-busca" class="entrada entrada--busca" placeholder="Nome ou login" autocomplete="off">
+                </div>
+            </div>
+            <div class="campo" style="flex:0 1 200px">
+                <label for="f-situacao">Situação</label>
+                <select id="f-situacao" class="entrada">
+                    <option value="ativos">Ativos</option>
+                    <option value="inativos">Inativos</option>
+                    <option value="">Todos</option>
+                </select>
+            </div>
+        </div>
+
+        <section class="cartao">
+            <div class="tabela-rolagem"><table class="tabela" id="tabela"></table></div>
+        </section>
+    </main>
+
+    <script type="module" src="assets/js/paginas/usuarios.js"></script>
+</body>
+</html>

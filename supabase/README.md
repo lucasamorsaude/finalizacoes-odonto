@@ -1,69 +1,63 @@
-# Migração para o Supabase
+# Finaliza Odonto — operação e manutenção
 
-O site continua estático no GitHub Pages; os dados saem da planilha/Apps Script e vão para o Supabase (Postgres + login + API).
+Site estático (GitHub Pages, branch `main`) + Supabase (Postgres, Auth, Edge Function).
+Especificação e decisões: [`specs/001-reformulacao-completa/`](../specs/001-reformulacao-completa/).
 
-## 1. Criar o projeto
+## Papéis
 
-1. Crie uma conta em https://supabase.com e um projeto novo (região **South America (São Paulo)**).
-2. **Authentication → Sign In / Providers**:
-   - Deixe o provedor **Email** habilitado.
-   - **Desligue "Allow new users to sign up"** — usuários só são criados pelo painel admin.
-3. **SQL Editor**: cole e rode o conteúdo de [`schema.sql`](schema.sql). *(Já aplicado no projeto atual.)*
+| Papel | Pode |
+|---|---|
+| Público (sem login) | Registrar procedimento pelo formulário (`index.html`) |
+| Profissional | Ver os próprios itens (fila, painel, registros) e registrar pelo sistema |
+| Administrador | Finalizar, alterar status, recusar com motivo, ver tudo, desempenho, usuários |
 
-## 2. Edge Function (criação de usuários e troca de senha)
+Status: **Pendente**, **Aguardando liberação**, **Aguardando pagamento** (abertos, na fila),
+**Finalizado** e **Recusado** (encerrados; recusa exige motivo, visível ao profissional).
+Toda alteração de status/observação fica no histórico (`finalizacao_eventos`).
 
-**Edge Functions → Deploy a new function → Via Editor**, nome `admin-usuarios`, cole o conteúdo de
-[`functions/admin-usuarios/index.ts`](functions/admin-usuarios/index.ts) e publique.
+## Configuração (já feita no projeto atual)
 
-(Alternativa via terminal: `npx supabase login` e depois
-`npx supabase functions deploy admin-usuarios --project-ref <ref-do-projeto>`.)
+1. Projeto Supabase; **Authentication → Sign In / Providers**: provedor Email ligado e
+   "Allow new users to sign up" **desligado**.
+2. Migrações em ordem: `supabase/migrations/001_inicial.sql`, `002_reformulacao.sql`.
+3. Edge Function `admin-usuarios` (`supabase/functions/admin-usuarios/index.ts`).
+4. URL e chave publishable em `assets/js/supabase.js` (chave pública por design).
 
-## 3. Configurar o site
+## `.env` (raiz, fora do Git)
 
-A URL do projeto e a chave **publishable** já estão no topo de [`../supabase-client.js`](../supabase-client.js).
-
-Essa chave é pública por design. A chave **secret / service_role** nunca vai para o site nem para o Git.
-
-## 4. Migrar os dados
-
-1. No Google Sheets: **Arquivo → Fazer download → Microsoft Excel (.xlsx)** e salve na raiz do projeto
-   como `Finalizações Odonto.xlsx` (o `.gitignore` impede que vá para o Git — contém dados de pacientes e senhas).
-2. No `.env` da raiz, além do que já existe, adicione `SUPABASE_SECRET_KEY=<secret key>`
-   (Project Settings → API Keys → Secret keys).
-3. Rode:
-
-```powershell
-cd scripts
-npm install
-node migrar.mjs --dry-run      # confere usuários, status e avisos sem gravar nada
-node migrar.mjs
+```
+DATABASE_URL=...                      # URL do projeto
+DATABASE_PUBLISH_KEY=...              # chave publishable
+DATABASE_DIRECT_CONNECTION_STRING=... # para aplicar migrações
+SUPABASE_SECRET_KEY=...               # service_role — migração e limpeza de testes
+SUPABASE_ACCESS_TOKEN=...             # opcional — publicar Edge Function pela CLI
+E2E_ADMIN_USUARIO=... / E2E_ADMIN_SENHA=...
 ```
 
-- Lê as abas **Dezembro**, **JANFEVMAR** e **Finalizações** (histórico completo) e a aba **Usuarios**.
-  Registros repetidos entre abas são descartados.
-- **Pode rodar de novo** com uma cópia mais nova da planilha: só entram finalizações e usuários que ainda
-  não estão no banco; nada editado no sistema é sobrescrito.
-- Usuários mantêm as senhas atuais. Logins com espaço/acento são normalizados (ex.: `Dra Ana` → `dra.ana`);
-  o login aceita a forma antiga também, porque a normalização é aplicada ao digitar.
-- O status (texto livre na planilha) vira um de: Pendente, Aguardando liberação, Aguardando pagamento, Finalizado.
-  Quando o texto tinha mais informação, ele é preservado no campo **Observação**.
-  Casos ambíguos (ex.: "finalizado, mas teve erro") vão para **Pendente** para revisão.
+## Tarefas comuns
 
-## 5. Virada
+```bash
+# Nova migração de banco (transação única; em erro nada muda)
+cd scripts && npm install
+node aplicar-migracao.mjs ../supabase/migrations/003_algo.sql
 
-1. Teste o site localmente ou num fork/branch (formulário, login de profissional, login admin, edição de status).
-2. Faça merge na `main` → GitHub Pages publica.
-3. **Arquive a implantação do Apps Script** (Implantar → Gerenciar implantações → Arquivar).
-   Hoje ela devolve todos os dados de pacientes e as senhas sem autenticação.
-4. Apague `codigo.gs` do repositório.
+# Rodar o site localmente
+node scripts/servidor-local.mjs          # http://localhost:8765
 
-## Detalhes técnicos
+# Testes e2e (gate antes de publicar) — cria e apaga dados temporários
+cd tests && npm install && npm run e2e   # capturas em tests/capturas/
 
-- Login: o Supabase Auth usa e-mail, então `usuario` vira `usuario@finalizacoes.local` e a senha recebe o prefixo
-  `odonto:` (o Supabase exige 6+ caracteres). Os mesmos valores estão em `supabase-client.js`,
-  na Edge Function e no script de migração — se mudar um, mude os três.
-- Permissões (tudo em `schema.sql`, via RLS):
-  - anônimo: só lista profissionais ativos e registra finalização (funções `listar_profissionais` / `registrar_finalizacao`);
-  - profissional: vê apenas os próprios registros;
-  - admin: vê tudo, altera status/observação, gerencia usuários.
-- Renomear o profissional de um usuário **não** renomeia os registros antigos (o vínculo é pelo nome, como na planilha).
+# Publicar a Edge Function
+npx supabase functions deploy admin-usuarios --project-ref vxeuacxxzjmpqlqgnoqd
+
+# Importar registros novos de uma cópia da planilha (.xlsx na raiz; só entra o que falta)
+cd scripts && node migrar.mjs --dry-run && node migrar.mjs
+```
+
+## Detalhes
+
+- Login por usuário: vira `usuario@finalizacoes.local` e a senha recebe o prefixo `odonto:`
+  (o Supabase exige 6+ caracteres). Os valores estão em `assets/js/supabase.js`, na Edge Function e
+  em `scripts/migrar.mjs` — se mudar um, mude os três.
+- O vínculo registro ↔ profissional é pelo nome; renomear um usuário não altera registros antigos.
+- O tempo até finalizar só existe para finalizações feitas no sistema (os dados da planilha não têm).

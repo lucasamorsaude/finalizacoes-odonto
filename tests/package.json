@@ -1,0 +1,13 @@
+{
+  "name": "testes-finaliza-odonto",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "e2e": "node e2e/rodar.mjs"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.117.2",
+    "dotenv": "^18.0.5",
+    "playwright-core": "^1.56.0"
+  }
+}

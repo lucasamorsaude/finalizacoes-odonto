@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desempenho · Finaliza Odonto</title>
+    <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/estilo.css">
+</head>
+<body>
+    <main class="conteudo" hidden>
+        <div class="cabecalho">
+            <div>
+                <h1>Desempenho por profissional</h1>
+                <p>Volume registrado e situação atual dos procedimentos recebidos no período.</p>
+            </div>
+        </div>
+
+        <div class="filtros">
+            <div class="campo" style="flex:0 0 auto">
+                <span class="rotulo" id="rotulo-periodo">Período</span>
+                <div class="segmentado" role="group" aria-labelledby="rotulo-periodo" id="periodo">
+                    <button type="button" data-dias="7">7 dias</button>
+                    <button type="button" data-dias="30">30 dias</button>
+                    <button type="button" data-dias="90">90 dias</button>
+                    <button type="button" data-dias="365">12 meses</button>
+                </div>
+            </div>
+            <div class="campo" style="flex:0 1 200px">
+                <label for="f-unidade">Unidade</label>
+                <select id="f-unidade" class="entrada"></select>
+            </div>
+        </div>
+
+        <div id="conteudo-desempenho">
+            <section class="cartao" style="margin-bottom:16px">
+                <div class="cartao__cab"><div><h2>Volume por profissional</h2><p>Clique em um profissional para ver a evolução semanal.</p></div></div>
+                <div class="cartao__corpo"><div class="grafico" id="grafico"></div></div>
+            </section>
+
+            <section class="cartao">
+                <div class="cartao__cab"><div><h2>Indicadores</h2><p>Clique no cabeçalho para ordenar.</p></div></div>
+                <div class="cartao__corpo" style="padding-left:0;padding-right:0">
+                    <div class="tabela-rolagem"><table class="tabela tabela--desempenho" id="tabela"></table></div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script type="module" src="assets/js/paginas/desempenho.js"></script>
+</body>
+</html>

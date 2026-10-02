@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fila de finalização · Finaliza Odonto</title>
+    <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/estilo.css">
+</head>
+<body>
+    <main class="conteudo" hidden>
+        <div class="cabecalho">
+            <div>
+                <h1>Fila de finalização</h1>
+                <p id="descricao">Itens aguardando baixa, do mais antigo para o mais recente.</p>
+            </div>
+            <div class="acoes">
+                <button type="button" class="btn botao-filtros" id="mostrar-filtros" aria-controls="filtros" aria-expanded="false"><i data-icone="busca"></i>Filtros</button>
+                <button type="button" class="btn" id="atualizar"><i data-icone="atualizar"></i>Atualizar</button>
+            </div>
+        </div>
+
+        <form class="filtros filtros--recolhivel" id="filtros" role="search" onsubmit="return false">
+            <div class="campo campo--busca">
+                <label for="f-busca">Paciente</label>
+                <div class="com-icone">
+                    <i data-icone="busca"></i>
+                    <input type="search" id="f-busca" class="entrada entrada--busca" placeholder="Buscar pelo nome" autocomplete="off">
+                </div>
+            </div>
+            <div class="campo">
+                <label for="f-unidade">Unidade</label>
+                <select id="f-unidade" class="entrada"></select>
+            </div>
+            <div class="campo" id="campo-profissional" hidden>
+                <label for="f-profissional">Profissional</label>
+                <select id="f-profissional" class="entrada"><option value="">Todos</option></select>
+            </div>
+            <div class="campo">
+                <label for="f-idade">Tempo na fila</label>
+                <select id="f-idade" class="entrada">
+                    <option value="">Qualquer</option>
+                    <option value="0-7">Até 7 dias</option>
+                    <option value="7-30">7 a 30 dias</option>
+                    <option value="30-90">30 a 90 dias</option>
+                    <option value="90-">Mais de 90 dias</option>
+                </select>
+            </div>
+            <div class="campo">
+                <label for="f-ordem">Ordem</label>
+                <select id="f-ordem" class="entrada">
+                    <option value="antigos">Mais antigos primeiro</option>
+                    <option value="recentes">Mais recentes primeiro</option>
+                </select>
+            </div>
+        </form>
+
+        <div class="resumo" id="resumo" aria-label="Filtrar por status"></div>
+
+        <div class="lista" id="lista" aria-live="polite"></div>
+
+        <div class="paginacao">
+            <span id="contagem"></span>
+            <button type="button" class="btn" id="mais" hidden>Carregar mais</button>
+        </div>
+
+        <div class="barra-lote" id="barra-lote" hidden>
+            <strong id="lote-qtd"></strong>
+            <button type="button" class="btn btn--sm" id="lote-limpar">Limpar seleção</button>
+            <button type="button" class="btn btn--sm" id="lote-status">Alterar status...</button>
+            <button type="button" class="btn btn--sm btn--primario" id="lote-finalizar"><i data-icone="checkDuplo"></i>Finalizar selecionados</button>
+        </div>
+
+        <div class="atalhos" id="atalhos" hidden>
+            <span><kbd>/</kbd> buscar</span>
+            <span><kbd>↑</kbd><kbd>↓</kbd> navegar</span>
+            <span><kbd>C</kbd> copiar nome</span>
+            <span><kbd>F</kbd> finalizar</span>
+            <span><kbd>Espaço</kbd> selecionar</span>
+            <span><kbd>Enter</kbd> detalhes</span>
+        </div>
+
+        <section class="secao" id="secao-recusados" hidden>
+            <h2><i data-icone="circuloX"></i>Recusados nos últimos 30 dias</h2>
+            <p class="texto-2 pequeno" style="margin:-4px 0 12px">Itens que não serão finalizados. Veja o motivo e, se for o caso, registre de novo com a correção.</p>
+            <div class="lista" id="lista-recusados"></div>
+        </section>
+    </main>
+
+    <script type="module" src="assets/js/paginas/fila.js"></script>
+</body>
+</html>

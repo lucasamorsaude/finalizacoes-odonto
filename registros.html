@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registros · Finaliza Odonto</title>
+    <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/estilo.css">
+</head>
+<body>
+    <main class="conteudo" hidden>
+        <div class="cabecalho">
+            <div>
+                <h1>Registros</h1>
+                <p id="descricao">Todos os procedimentos registrados, em qualquer situação.</p>
+            </div>
+            <div class="acoes">
+                <button type="button" class="btn botao-filtros" id="mostrar-filtros" aria-controls="filtros" aria-expanded="false"><i data-icone="busca"></i>Filtros</button>
+                <button type="button" class="btn" id="exportar" hidden><i data-icone="baixar"></i>Exportar CSV</button>
+            </div>
+        </div>
+
+        <form class="filtros filtros--recolhivel" id="filtros" role="search" onsubmit="return false">
+            <div class="campo campo--busca">
+                <label for="f-busca">Paciente</label>
+                <div class="com-icone">
+                    <i data-icone="busca"></i>
+                    <input type="search" id="f-busca" class="entrada entrada--busca" placeholder="Buscar pelo nome" autocomplete="off">
+                </div>
+            </div>
+            <div class="campo">
+                <label for="f-unidade">Unidade</label>
+                <select id="f-unidade" class="entrada"></select>
+            </div>
+            <div class="campo" id="campo-profissional" hidden>
+                <label for="f-profissional">Profissional</label>
+                <select id="f-profissional" class="entrada"></select>
+            </div>
+            <div class="campo" style="flex:0 1 150px">
+                <label for="f-de">De</label>
+                <input type="date" id="f-de" class="entrada">
+            </div>
+            <div class="campo" style="flex:0 1 150px">
+                <label for="f-ate">Até</label>
+                <input type="date" id="f-ate" class="entrada">
+            </div>
+        </form>
+
+        <div class="resumo" id="resumo" aria-label="Filtrar por status"></div>
+        <div class="lista" id="lista" aria-live="polite"></div>
+        <div class="paginacao">
+            <span id="contagem"></span>
+            <div style="display:flex;gap:8px">
+                <button type="button" class="btn btn--sm" id="anterior"><i data-icone="esquerda"></i>Anterior</button>
+                <button type="button" class="btn btn--sm" id="proxima">Próxima<i data-icone="direita"></i></button>
+            </div>
+        </div>
+    </main>
+
+    <script type="module" src="assets/js/paginas/registros.js"></script>
+</body>
+</html>
