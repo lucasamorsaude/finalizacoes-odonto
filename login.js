@@ -1,11 +1,15 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     const form = document.getElementById('loginForm');
     const loginMessageDiv = document.getElementById('loginMessage');
     const backToIndexButton = document.getElementById('backToIndexButton');
-    const passwordInput = document.getElementById('password'); // Novo: Referência ao campo de senha
-    const togglePassword = document.getElementById('togglePassword'); // Novo: Referência ao ícone do olhinho
+    const passwordInput = document.getElementById('password');
+    const togglePassword = document.getElementById('togglePassword');
 
-    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzZ4pDx74e82rT2TJQevF-DB-cKGIuzPvTQASLqytmA0AyRivmjgvuprlAOI3ye2zpySQ/exec';
+    // Já logado: vai direto para o dashboard
+    if (await carregarPerfil()) {
+        window.location.href = 'dashboard.html';
+        return;
+    }
 
     form.addEventListener('submit', async (event) => {
         event.preventDefault();
@@ -13,45 +17,37 @@ document.addEventListener('DOMContentLoaded', () => {
         loginMessageDiv.textContent = 'Verificando...';
         loginMessageDiv.style.color = '#007bff';
 
-        const username = document.getElementById('username').value;
-        const password = passwordInput.value; // Usando a referência correta
+        const { error } = await sb.auth.signInWithPassword({
+            email: emailDoUsuario(document.getElementById('username').value),
+            password: PREFIXO_SENHA + passwordInput.value,
+        });
 
-        const formData = new FormData();
-        formData.append('action', 'login');
-        formData.append('username', username);
-        formData.append('password', password);
-
-        try {
-            const response = await fetch(WEB_APP_URL, {
-                method: 'POST',
-                body: formData,
-            });
-
-            const data = await response.json();
-
-            if (data.status === 'success') {
-                loginMessageDiv.textContent = 'Login bem-sucedido!';
-                loginMessageDiv.style.color = '#28a745';
-                localStorage.setItem('loggedIn', 'true');
-                localStorage.setItem('loggedInUser', data.username);
-                localStorage.setItem('isAdmin', data.admin ? 'true' : 'false');
-                window.location.href = 'dashboard.html';
-            } else {
-                loginMessageDiv.textContent = data.message;
-                loginMessageDiv.style.color = '#dc3545';
-            }
-        } catch (error) {
-            console.error('Erro na requisição:', error);
-            loginMessageDiv.textContent = 'Erro de conexão. Tente novamente.';
+        if (error) {
+            console.error('Erro no login:', error);
+            loginMessageDiv.textContent = error.message === 'Invalid login credentials'
+                ? 'Usuário ou senha inválidos.'
+                : 'Erro de conexão. Tente novamente.';
             loginMessageDiv.style.color = '#dc3545';
+            return;
         }
+
+        const perfil = await carregarPerfil();
+        if (!perfil) {
+            await sb.auth.signOut();
+            loginMessageDiv.textContent = 'Usuário inativo. Contate o administrador.';
+            loginMessageDiv.style.color = '#dc3545';
+            return;
+        }
+
+        loginMessageDiv.textContent = 'Login bem-sucedido!';
+        loginMessageDiv.style.color = '#28a745';
+        window.location.href = 'dashboard.html';
     });
 
     backToIndexButton.addEventListener('click', () => {
         window.location.href = 'index.html';
     });
 
-    // Novo: Funcionalidade do olhinho para mostrar/esconder a senha
     togglePassword.addEventListener('click', function() {
         const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
         passwordInput.setAttribute('type', type);

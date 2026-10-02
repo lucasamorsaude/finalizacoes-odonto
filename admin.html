@@ -42,10 +42,9 @@
         <div class="modal">
             <h2 id="modalTitulo">Novo Usuário</h2>
             <form id="usuarioForm">
-                <input type="hidden" id="targetUsuario">
                 <div class="modal-field">
                     <label for="inputUsuario">Usuário (login)</label>
-                    <input type="text" id="inputUsuario" required placeholder="Ex: dra.ana">
+                    <input type="text" id="inputUsuario" required placeholder="Ex: dra.ana" autocomplete="off">
                 </div>
                 <div class="modal-field">
                     <label for="inputSenha">Senha</label>
@@ -63,6 +62,11 @@
                         <option value="SJDR APOIO">SJDR APOIO</option>
                     </select>
                 </div>
+                <div class="modal-field modal-field--check">
+                    <label for="inputAdmin">
+                        <input type="checkbox" id="inputAdmin"> Administrador (vê todos os registros e gerencia usuários)
+                    </label>
+                </div>
                 <div class="modal-actions">
                     <button type="button" id="modalCancelarBtn" class="btn-admin btn-admin--secondary">Cancelar</button>
                     <button type="submit" class="btn-admin btn-admin--primary" id="modalSalvarBtn">
@@ -73,6 +77,8 @@
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-client.js"></script>
     <script src="admin.js"></script>
 </body>
 </html>

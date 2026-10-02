@@ -17,7 +17,7 @@
         <h1>Consulta de Procedimentos</h1>
         <div class="header-actions">
             <button id="adminButton" class="header-button header-button--admin" style="display:none;">
-                <i class="fas fa-users-cog"></i> Admin
+                <i class="fas fa-users-cog"></i> Usuários
             </button>
             <button id="logoutButton" class="header-button">
                 <i class="fas fa-sign-out-alt"></i> Sair
@@ -26,32 +26,63 @@
     </header>
 
     <div class="container">
-        <div class="filter-controls">
+        <form id="filtrosForm" class="filter-controls">
             <div class="form-group filter-group">
                 <label for="filtroUnidade">Unidade</label>
-                <select id="filtroUnidade" name="filtroUnidade">
+                <select id="filtroUnidade">
                     <option value="">Todas</option>
                     <option value="SJDR">SJDR</option>
                     <option value="SJDR APOIO">SJDR APOIO</option>
                 </select>
             </div>
-            <div class="form-group filter-group">
+            <div class="form-group filter-group" id="grupoProfissional" style="display:none;">
                 <label for="filtroProfissional">Profissional</label>
-                <select id="filtroProfissional" name="filtroProfissional">
+                <select id="filtroProfissional">
                     <option value="">Todos</option>
                 </select>
             </div>
-            <button id="consultarButton">
+            <div class="form-group filter-group">
+                <label for="filtroStatus">Status</label>
+                <select id="filtroStatus">
+                    <option value="">Todos</option>
+                </select>
+            </div>
+            <div class="form-group filter-group">
+                <label for="filtroPaciente">Paciente</label>
+                <input type="search" id="filtroPaciente" placeholder="Buscar pelo nome">
+            </div>
+            <div class="form-group filter-group filter-group--data">
+                <label for="filtroDe">De</label>
+                <input type="date" id="filtroDe">
+            </div>
+            <div class="form-group filter-group filter-group--data">
+                <label for="filtroAte">Até</label>
+                <input type="date" id="filtroAte">
+            </div>
+            <button type="submit" id="consultarButton">
                 <i class="fas fa-search"></i> Consultar
+            </button>
+        </form>
+
+        <div class="toolbar">
+            <div id="resumoStatus" class="resumo-status"></div>
+            <button id="exportarButton" class="btn-ghost" style="display:none;">
+                <i class="fas fa-file-csv"></i> Exportar CSV
             </button>
         </div>
 
         <div id="resultados">
-            <p>Selecione os filtros e clique em "Consultar" para ver os dados.</p>
+            <p>Carregando dados...</p>
+        </div>
+        <div class="paginacao">
+            <span id="contagem"></span>
+            <button id="carregarMaisButton" class="btn-ghost" style="display:none;">Carregar mais</button>
         </div>
         <p id="dashboardMessage"></p>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-client.js"></script>
     <script src="dashboard.js"></script>
 </body>
 </html>

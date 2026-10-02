@@ -184,3 +184,18 @@
         height: 42px;
     }
 }
+
+.badge--admin { background: var(--primary-light); color: var(--primary); }
+
+.modal-field--check label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 0.85rem;
+    color: var(--text-primary);
+    cursor: pointer;
+}
+
+.modal-field--check input { width: auto; height: auto; }
