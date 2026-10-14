@@ -1,6 +1,6 @@
 // Fila de finalização — admin opera (copiar, finalizar, lote, status); profissional acompanha os seus.
 import { iniciarApp, atualizarContadorFila } from '../app.js';
-import { sb, STATUS, STATUS_ABERTOS, STATUS_TODOS, UNIDADES } from '../supabase.js';
+import { sb, STATUS, STATUS_ABERTOS, STATUS_ADMIN, UNIDADES } from '../supabase.js';
 import { icone } from '../icones.js';
 import {
     esc, idade, dataHora, chipStatus, classeStatus, nomeCopiavel, copiarTexto, toast, esqueletoLinhas, vazio, falha,
@@ -232,7 +232,7 @@ function aplicarResultado(anteriores, novoStatus) {
         return;
     }
     removerDaLista(anteriores);
-    const verbo = novoStatus === STATUS.FINALIZADO ? 'finalizado' : 'recusado';
+    const verbo = { [STATUS.FINALIZADO]: 'finalizado', [STATUS.ARQUIVADO]: 'arquivado' }[novoStatus] ?? 'recusado';
     const texto = anteriores.length === 1
         ? `${verbo[0].toUpperCase()}${verbo.slice(1)}: ${anteriores[0].paciente}`
         : `${anteriores.length} itens ${verbo}s`;
@@ -288,7 +288,7 @@ function finalizarEmLote() {
             <ul style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px;font-size:0.875rem">${nomes}</ul>
             <form id="form-lote" novalidate style="display:flex;flex-direction:column;gap:14px">
                 <div class="opcoes-status">
-                    ${STATUS_TODOS.map(s => `<label><input type="radio" name="status" value="${esc(s)}" ${s === STATUS.FINALIZADO ? 'checked' : ''}>${esc(s)}</label>`).join('')}
+                    ${STATUS_ADMIN.map(s => `<label><input type="radio" name="status" value="${esc(s)}" ${s === STATUS.FINALIZADO ? 'checked' : ''}>${esc(s)}</label>`).join('')}
                 </div>
                 <div class="campo">
                     <label for="lote-obs" id="lote-obs-rotulo">Observação (opcional)</label>
@@ -305,7 +305,8 @@ function finalizarEmLote() {
     const confirmar = modal.querySelector('#lote-confirmar');
     const ajustar = () => {
         const status = form.status.value;
-        modal.querySelector('#lote-obs-rotulo').textContent = status === STATUS.RECUSADO ? 'Motivo da recusa (obrigatório)' : 'Observação (opcional)';
+        modal.querySelector('#lote-obs-rotulo').textContent = status === STATUS.RECUSADO ? 'Motivo da recusa (obrigatório)'
+            : status === STATUS.ARQUIVADO ? 'Motivo do arquivamento (opcional, oculto para o profissional)' : 'Observação (opcional)';
         confirmar.innerHTML = `${icone('checkDuplo')}${status === STATUS.FINALIZADO ? 'Confirmar finalização' : 'Aplicar'}`;
     };
     form.addEventListener('change', ajustar);

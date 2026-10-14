@@ -76,6 +76,7 @@ const VISUAL_STATUS = {
     [STATUS.PAGAMENTO]: { classe: 'st-pagamento', icone: 'carteira' },
     [STATUS.FINALIZADO]: { classe: 'st-finalizado', icone: 'circuloCheck' },
     [STATUS.RECUSADO]: { classe: 'st-recusado', icone: 'circuloX' },
+    [STATUS.ARQUIVADO]: { classe: 'st-arquivado', icone: 'arquivo' },
 };
 
 export const classeStatus = status => VISUAL_STATUS[status]?.classe ?? '';

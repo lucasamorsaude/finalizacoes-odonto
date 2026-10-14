@@ -1,6 +1,6 @@
 // Consulta completa de registros: filtros, paginação, detalhe com histórico e exportação (admin).
 import { iniciarApp } from '../app.js';
-import { sb, STATUS_TODOS, UNIDADES } from '../supabase.js';
+import { sb, STATUS_TODOS, STATUS_ADMIN, UNIDADES } from '../supabase.js';
 import { icone } from '../icones.js';
 import {
     esc, dataHora, chipStatus, classeStatus, nomeCopiavel, numero, toast, esqueletoLinhas, vazio, falha, debounce,
@@ -13,6 +13,7 @@ aplicarIcones();
 ativarFiltrosMoveis(document.getElementById('mostrar-filtros'), document.getElementById('filtros'));
 const perfil = await iniciarApp({ tela: 'registros' });
 const admin = perfil.is_admin;
+const STATUS_VISIVEIS = admin ? STATUS_ADMIN : STATUS_TODOS;
 
 const POR_PAGINA = 50;
 const COLUNAS = 'id, unidade, paciente, procedimento, profissional, status, observacao, created_at, updated_at';
@@ -26,7 +27,7 @@ const params = lerParametros();
 let pagina = 0;
 let total = 0;
 let itens = [];
-let status = STATUS_TODOS.includes(params.status) ? params.status : '';
+let status = STATUS_VISIVEIS.includes(params.status) ? params.status : '';
 let primeiraCarga = true;
 
 segmentado(el.unidade, [['', 'Todas'], ...UNIDADES], { valor: params.unidade ?? '' });
@@ -102,7 +103,7 @@ async function carregar({ manterPagina = false } = {}) {
 function renderizarResumo(dados) {
     const porStatus = Object.fromEntries(dados.map(r => [r.status, Number(r.total)]));
     const todos = dados.reduce((s, r) => s + Number(r.total), 0);
-    el.resumo.innerHTML = [['', 'Todos', todos], ...STATUS_TODOS.map(s => [s, s, porStatus[s] ?? 0])]
+    el.resumo.innerHTML = [['', 'Todos', todos], ...STATUS_VISIVEIS.map(s => [s, s, porStatus[s] ?? 0])]
         .map(([valor, rotulo, qtd]) => `
             <button type="button" class="${classeStatus(valor)}" data-status="${esc(valor)}" aria-pressed="${status === valor}">
                 ${esc(rotulo)} <strong class="num">${numero(qtd)}</strong>

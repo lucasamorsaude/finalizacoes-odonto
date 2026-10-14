@@ -231,7 +231,35 @@ async function principal() {
         afirmar(error, 'RPC de desempenho deveria falhar');
     });
 
-    await cenario('10. Painel e desempenho coerentes com o banco', async () => {
+    await cenario('10. Arquivar some para o dentista e fica só para o admin', async () => {
+        await admin.goto(`${BASE}fila.html?profissional=${encodeURIComponent(PROF)}`);
+        await linhaDe(PACIENTES[3]).locator('[data-acao="finalizar"]').click();
+        await admin.check('input[name="status"][value="Arquivado"]');
+        afirmar((await admin.textContent('#detalhe-obs-rotulo')).includes('arquivamento'), 'rótulo do motivo não mudou');
+        await admin.fill('#detalhe-obs', 'Lançamento duplicado (teste)');
+        await admin.click('.modal button[type="submit"]');
+        await linhaDe(PACIENTES[3]).waitFor({ state: 'detached' });
+        const dora = (await registrosTemporarios()).find(r => r.paciente === PACIENTES[3]);
+        afirmar(dora.status === 'Arquivado', `status ficou ${dora.status}`);
+
+        const api = publico();
+        await api.auth.signInWithPassword({ email: `${LOGIN_PROF}@finalizacoes.local`, password: `odonto:${SENHA_PROF}` });
+        const { data: visto } = await api.from('finalizacoes').select('id').eq('id', dora.id);
+        afirmar(!visto?.length, 'dentista ainda vê o arquivado pela API');
+        const { data: eventos } = await api.from('finalizacao_eventos').select('id').eq('finalizacao_id', dora.id);
+        afirmar(!eventos?.length, 'dentista vê o histórico do arquivado');
+
+        await dentista.goto(`${BASE}registros.html`);
+        await dentista.waitForSelector('#resumo button');
+        afirmar(!(await dentista.isVisible(`text=${PACIENTES[3]}`)), 'arquivado aparece nos registros do dentista');
+        afirmar(!(await dentista.isVisible('#resumo button:has-text("Arquivado")')), 'dentista vê filtro Arquivado');
+
+        await admin.goto(`${BASE}registros.html?status=Arquivado&profissional=${encodeURIComponent(PROF)}`);
+        await admin.locator('.linha[data-id]', { hasText: PACIENTES[3] }).waitFor();
+        await admin.screenshot({ path: `${CAPTURAS}registros-arquivado.png` });
+    });
+
+    await cenario('11. Painel e desempenho coerentes com o banco (sem arquivados)', async () => {
         await admin.goto(`${BASE}painel.html`);
         await admin.waitForSelector('#kpis .kpi');
         await admin.waitForSelector('#grafico-serie svg');
@@ -240,7 +268,7 @@ async function principal() {
 
         const amanha = new Date(`${new Date(Date.now() - 3 * 3600000).toISOString().slice(0, 10)}T00:00:00-03:00`).getTime() + 86400000;
         const { count } = await secreto.from('finalizacoes').select('id', { count: 'exact', head: true })
-            .gte('created_at', new Date(amanha - 30 * 86400000).toISOString()).lt('created_at', new Date(amanha).toISOString());
+            .neq('status', 'Arquivado').gte('created_at', new Date(amanha - 30 * 86400000).toISOString()).lt('created_at', new Date(amanha).toISOString());
         afirmar(Number(recebidosTela) === count, `painel ${recebidosTela} × banco ${count}`);
 
         const abertoTela = (await admin.textContent('#aberto-total')).replace(/\D/g, '');
@@ -252,7 +280,7 @@ async function principal() {
         await admin.waitForSelector('#tabela tbody tr');
         const linha = admin.locator('#tabela tbody tr', { hasText: PROF });
         const recebidosProf = await linha.locator('td').nth(1).textContent();
-        afirmar(recebidosProf.trim() === '4', `desempenho mostra ${recebidosProf} recebidos`);
+        afirmar(recebidosProf.trim() === '3', `desempenho mostra ${recebidosProf} recebidos`);
         await admin.screenshot({ path: `${CAPTURAS}desempenho.png`, fullPage: true });
         await linha.locator('[data-evolucao]').click();
         await admin.waitForSelector('#grafico-evolucao svg');
@@ -260,7 +288,7 @@ async function principal() {
         return `recebidos 30d = ${count}, abertos = ${abertos}`;
     });
 
-    await cenario('11. Telas em 360 px, modo escuro e botão de tema, sem erros', async () => {
+    await cenario('12. Telas em 360 px, modo escuro e botão de tema, sem erros', async () => {
         const telas = ['fila.html', 'painel.html', 'desempenho.html', 'registros.html', 'usuarios.html'];
         const movel = await novaPagina({ largura: 360, altura: 780 });
         await movel.goto(BASE);
@@ -311,8 +339,8 @@ try {
     const residuo = await registrosTemporarios();
     const { data: usuarioResto } = await secreto.from('usuarios').select('id').eq('username', LOGIN_PROF);
     const limpo = !residuo.length && !usuarioResto?.length;
-    resultados.push({ nome: '12. Limpeza', ok: limpo });
-    console.log(`  ${limpo ? '✔' : '✘'} 12. Limpeza — ${limpo ? 'sem resíduos' : 'restaram dados de teste'}`);
+    resultados.push({ nome: '13. Limpeza', ok: limpo });
+    console.log(`  ${limpo ? '✔' : '✘'} 13. Limpeza — ${limpo ? 'sem resíduos' : 'restaram dados de teste'}`);
     await navegador?.close();
     servidor?.kill();
     const falhas = resultados.filter(r => !r.ok).length;

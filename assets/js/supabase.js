@@ -26,9 +26,12 @@ export const STATUS = {
     PAGAMENTO: 'Aguardando pagamento',
     FINALIZADO: 'Finalizado',
     RECUSADO: 'Recusado',
+    ARQUIVADO: 'Arquivado',
 };
 export const STATUS_ABERTOS = [STATUS.PENDENTE, STATUS.LIBERACAO, STATUS.PAGAMENTO];
 export const STATUS_TODOS = [...STATUS_ABERTOS, STATUS.FINALIZADO, STATUS.RECUSADO];
+// Arquivado: lançamento errado ou de profissional que saiu. Só a administração vê (RLS).
+export const STATUS_ADMIN = [...STATUS_TODOS, STATUS.ARQUIVADO];
 
 export function normalizarUsuario(usuario) {
     return usuario.normalize('NFD').replace(/[̀-ͯ]/g, '')

@@ -33,6 +33,7 @@
     --st-pagamento-bg: #ece8fb;  --st-pagamento-fg: #4c2f9e;  --st-pagamento-pt: #6d4fd8;
     --st-finalizado-bg: #def3e3; --st-finalizado-fg: #146c2e; --st-finalizado-pt: #1f9d48;
     --st-recusado-bg: #fbe4e2;   --st-recusado-fg: #9b1c1c;   --st-recusado-pt: #d03b3b;
+    --st-arquivado-bg: #ebedf0;  --st-arquivado-fg: #4a5361;  --st-arquivado-pt: #8a93a1;
 
     /* Gráficos (paleta validada — ver specs/001-reformulacao-completa/research.md R3) */
     --serie-1: #2a78d6;
@@ -86,6 +87,7 @@
         --st-pagamento-bg: rgba(144, 133, 233, 0.20); --st-pagamento-fg: #c3baf7;
         --st-finalizado-bg: rgba(31, 157, 72, 0.18); --st-finalizado-fg: #7fdc9b;
         --st-recusado-bg: rgba(208, 59, 59, 0.20);   --st-recusado-fg: #f5a3a3;
+        --st-arquivado-bg: rgba(138, 147, 161, 0.18); --st-arquivado-fg: #c3c9d2;
 
         --serie-1: #3987e5;
         --serie-2: #d95926;
@@ -131,6 +133,7 @@
     --st-pagamento-bg: rgba(144, 133, 233, 0.20); --st-pagamento-fg: #c3baf7;
     --st-finalizado-bg: rgba(31, 157, 72, 0.18); --st-finalizado-fg: #7fdc9b;
     --st-recusado-bg: rgba(208, 59, 59, 0.20);   --st-recusado-fg: #f5a3a3;
+    --st-arquivado-bg: rgba(138, 147, 161, 0.18); --st-arquivado-fg: #c3c9d2;
 
     --serie-1: #3987e5;
     --serie-2: #d95926;
@@ -374,6 +377,7 @@ select.entrada {
 .st-pagamento  { --st-bg: var(--st-pagamento-bg);  --st-fg: var(--st-pagamento-fg);  --st-pt: var(--st-pagamento-pt); }
 .st-finalizado { --st-bg: var(--st-finalizado-bg); --st-fg: var(--st-finalizado-fg); --st-pt: var(--st-finalizado-pt); }
 .st-recusado   { --st-bg: var(--st-recusado-bg);   --st-fg: var(--st-recusado-fg);   --st-pt: var(--st-recusado-pt); }
+.st-arquivado  { --st-bg: var(--st-arquivado-bg);  --st-fg: var(--st-arquivado-fg);  --st-pt: var(--st-arquivado-pt); }
 
 /* Contadores por status (filtro rápido) */
 .resumo { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }

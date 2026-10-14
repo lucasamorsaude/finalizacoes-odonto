@@ -1,5 +1,5 @@
 // Janela de detalhe de um registro: dados, linha do tempo e (admin) alteração de status/observação.
-import { sb, STATUS, STATUS_TODOS } from './supabase.js';
+import { sb, STATUS, STATUS_ADMIN } from './supabase.js';
 import { icone } from './icones.js';
 import {
     esc, dataHora, idade, chipStatus, classeStatus, nomeCopiavel, abrirModal, toast, botaoCarregando, mensagemErro,
@@ -22,7 +22,7 @@ export function abrirDetalhe(item, { admin = false, statusInicial = null, aoSalv
             <fieldset style="border:0;padding:0;margin:0;display:flex;flex-direction:column;gap:10px">
                 <legend class="rotulo" style="margin-bottom:8px">Status</legend>
                 <div class="opcoes-status">
-                    ${STATUS_TODOS.map(s => `
+                    ${STATUS_ADMIN.map(s => `
                         <label class="${classeStatus(s)}">
                             <input type="radio" name="status" value="${esc(s)}" ${s === statusEscolhido ? 'checked' : ''}>
                             ${esc(s)}
@@ -74,7 +74,10 @@ export function abrirDetalhe(item, { admin = false, statusInicial = null, aoSalv
     const salvar = el.querySelector('#detalhe-salvar');
     const ajustarRotulo = () => {
         const recusado = statusAtual() === STATUS.RECUSADO;
-        obsRotulo.textContent = recusado ? 'Motivo da recusa (obrigatório)' : 'Observação';
+        const arquivado = statusAtual() === STATUS.ARQUIVADO;
+        obsRotulo.textContent = recusado ? 'Motivo da recusa (obrigatório)'
+            : arquivado ? 'Motivo do arquivamento (opcional)' : 'Observação';
+        obs.placeholder = arquivado ? 'Arquivados ficam ocultos para o profissional' : 'Visível para o profissional';
         obs.required = recusado;
         if (!recusado) obsErro.hidden = true;
         const finalizando = statusAtual() === STATUS.FINALIZADO && item.status !== STATUS.FINALIZADO;
